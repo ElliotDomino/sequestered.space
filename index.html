@@ -91,35 +91,9 @@
 
       </main>
     </div>
+
+    <script src="/nav-loader.js" defer></script>
+
   </body>
-
-  <script>
-    const navHost = document.getElementById("nav-placeholder");
-
-    fetch("nav.html")
-      .then(r => r.text())
-      .then(html => {
-        navHost.innerHTML = html;
-
-        // Determine current file (default to index.html)
-        const path = location.pathname.split("/").pop() || "index.html";
-
-        // Clear any accidental active states (defensive, but safe)
-        navHost.querySelectorAll(".filetree__item.is-active")
-          .forEach(a => a.classList.remove("is-active"));
-
-        // Mark current page as active
-        const link = navHost.querySelector(`a[href$="${path}"]`);
-        if (link) link.classList.add("is-active");
-
-        // Reveal nav only after it is fully injected
-        navHost.classList.add("is-loaded");
-      })
-      .catch(() => {
-        // Fail open: still reveal layout if nav fails to load
-        navHost.classList.add("is-loaded");
-      });
-  </script>
-
 </html>
 
