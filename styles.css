@@ -1,0 +1,377 @@
+/* =========================
+   Reset
+========================= */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; }
+
+/* =========================
+   Theme + Tokens
+========================= */
+:root {
+  /* Default tile size */
+  --tile-size: 96px;
+
+  /* Color Palette HEX */
+  --carbon-black: #222222ff;
+  --golden-glow:  #ecd444ff;
+  --grey:         #808080ff;
+  --white:        #ffffffff;
+  --turquoise:    #63e2c6ff;
+
+  /* Theme roles */
+  --bg: var(--carbon-black);
+
+  /* Surfaces */
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-2: rgba(255, 255, 255, 0.10);
+
+  /* Text */
+  --text-strong: var(--white);
+  --text: rgba(255, 255, 255, 0.92);
+  --text-muted: rgba(255, 255, 255, 0.70);
+  --text-faint: rgba(255, 255, 255, 0.50);
+
+  /* UI chrome */
+  --border: rgba(128, 128, 128, 0.45);
+
+  /* Accents */
+  --primary: var(--turquoise);
+  --secondary: var(--golden-glow);
+
+  /* Focus glow */
+  --focus: rgba(236, 212, 68, 0.55);
+
+  /* Sidebar sizing */
+  --sidebar-width: 320px;
+}
+
+/* =========================
+   Base page styling
+========================= */
+body {
+  background-color: var(--bg);
+  background-image: url("/resources/background-tile.png");
+  background-repeat: repeat;
+  background-position: center center;
+  background-size: var(--tile-size) var(--tile-size);
+
+  color: var(--text);
+  font-family: monospace;
+}
+
+/* Typography */
+h1, h2, h3 {
+  color: var(--text-strong);
+  letter-spacing: 0.02em;
+  margin: 0 0 0.5em;
+}
+
+p {
+  margin: 0 0 1em;
+  color: var(--text);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 0.18em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* =========================
+   Cards / Panels
+========================= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px;
+  overflow: visible; /* do not globally clip */
+}
+
+/* =========================
+   Layout
+========================= */
+.layout {
+  min-height: 100%;
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-width);
+  flex: 0 0 var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Allow long "tree" lines without wrapping, but keep it contained */
+.sidebar.card {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Main content */
+.page {
+  flex: 1;
+  min-height: 100%;
+  padding: 24px;
+}
+
+/* =========================
+   Sidebar Header (your class names)
+========================= */
+.sidebar_header .title_text {
+  color: var(--text-strong);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.sidebar_header .title_subtext {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* Footer badge */
+.sidebar__footer { margin-top: auto; }
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  background: rgba(236, 212, 68, 0.18);
+  color: var(--secondary);
+}
+
+/* =========================
+   Tree-style file navigation
+========================= */
+.filetree {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  white-space: nowrap; /* terminal-like */
+}
+
+.filetree__item {
+  display: block;
+  color: var(--text);
+  text-decoration: none;
+  padding: 2px 0;
+}
+
+.tree-prefix {
+  color: var(--text-muted);
+  white-space: pre; /* preserve pipe spacing */
+}
+
+/* Folder (details/summary) */
+.filetree__folder {
+  margin: 0;
+  padding: 0;
+}
+
+.filetree__folder summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.filetree__folder summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Folder line and subtle toggle on the right */
+.filetree__item.folder {
+  color: var(--text-strong);
+  position: relative;
+  padding-right: 28px; /* space for toggle */
+}
+
+/* Toggle glyph (expects <span class="folder-toggle"></span> inside summary) */
+.folder-toggle::before {
+  content: "[+]";
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: var(--text-muted);
+}
+
+.filetree__folder[open] .folder-toggle::before {
+  content: "[-]";
+}
+
+/* Children container: indentation handled by the text prefixes */
+.filetree__children {
+  margin: 0;
+  padding: 0;
+}
+
+/* Hover + active */
+.filetree__item:hover {
+  color: var(--primary);
+}
+
+.filetree__item.is-active {
+  color: var(--secondary);
+}
+
+/* Blinking cursor for active item */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.filetree__item.is-active::after {
+  content: " ▉";
+  animation: blink 1s step-end infinite;
+}
+
+/* =========================
+   Buttons (optional, kept from your earlier CSS)
+========================= */
+.btn {
+  font: inherit;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-strong);
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: var(--carbon-black);
+  border-color: rgba(99, 226, 198, 0.9);
+}
+
+.btn--secondary {
+  background: var(--secondary);
+  color: var(--carbon-black);
+  border-color: rgba(236, 212, 68, 0.9);
+}
+
+/* =========================
+   Responsive layout
+========================= */
+@media (max-width: 720px) {
+  :root { --sidebar-width: auto; }
+
+  .layout { flex-direction: column; }
+  .sidebar { width: auto; flex: 0 0 auto; }
+
+  /* On small screens, allow wrapping so it doesn't force horizontal scroll */
+  .filetree { white-space: normal; }
+  .sidebar.card { overflow-x: hidden; overflow-y: visible; }
+}
+
+/* Slightly wider sidebar on big screens (optional) */
+@media (min-width: 1100px) {
+  :root { --sidebar-width: 360px; }
+}
+
+/* =========================
+   Collapsible sidebar toggle (CSS-only)
+========================= */
+
+/* Hide the checkbox but keep it functional */
+.nav-toggle {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Make layout a positioning context for the hanging button */
+.layout {
+  position: relative;
+}
+
+/* Hanging button */
+.nav-toggle-btn {
+  position: absolute;
+  top: 16px; /* aligns with layout padding */
+  left: calc(16px + var(--sidebar-width) - 14px); /* "hang" over sidebar edge */
+  z-index: 10;
+
+  padding: 8px 10px;
+  cursor: pointer;
+  user-select: none;
+
+  /* Make it look like a little tab */
+  border-radius: 10px;
+}
+
+/* Icon style */
+.nav-toggle-icon {
+  color: var(--text-strong);
+}
+
+/* When collapsed: hide sidebar, shift button to the left edge */
+.nav-toggle:checked ~ .layout .sidebar {
+  width: 0;
+  flex-basis: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+}
+
+/* Move button to hang at the left edge when collapsed */
+.nav-toggle:checked ~ .layout .nav-toggle-btn {
+  left: 16px; /* layout padding */
+}
+
+/* Flip the icon when collapsed */
+.nav-toggle:checked ~ .layout .nav-toggle-icon {
+  content: "";
+}
+.nav-toggle:checked ~ .layout .nav-toggle-icon::before {
+  content: "⟩⟩";
+}
+
+/* Smooth transitions */
+.sidebar,
+.nav-toggle-btn {
+  transition: width 200ms ease, flex-basis 200ms ease, left 200ms ease, padding 200ms ease;
+}
+
+/* Mobile: make the button sit above nicely */
+@media (max-width: 720px) {
+  .nav-toggle-btn {
+    left: 16px;
+    top: 16px;
+  }
+
+  .nav-toggle:checked ~ .layout .sidebar {
+    display: none; /* simplest on mobile */
+  }
+}
+
+
+/* =========================
+   Background tile scaling
+========================= */
+@media (min-width: 480px) {
+  :root { --tile-size: 112px; }
+}
+
+@media (min-width: 768px) {
+  :root { --tile-size: 140px; }
+}
+
+@media (min-width: 1200px) {
+  :root { --tile-size: 172px; }
+}
+
+@media (min-resolution: 2dppx) {
+  :root { --tile-size: calc(var(--tile-size) * 1.15); }
+}
+
