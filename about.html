@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>about | sequestered.space</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+
+    <input class="nav-toggle" type="checkbox" id="nav-toggle"/>
+
+    <div class="layout">
+
+      <label class="nav-toggle-btn card" for="nav-toggle" aria-label="Toggle sidebar">
+        <span class="nav-toggle-icon" aria-hidden="true"></span>
+      </label>
+
+      <div id="nav-placeholder"></div>
+      
+      <main class="page">
+
+        <h1>About</h1>
+
+        <section class="card card--with-media">
+          <div class="card__content">
+            <h2>$ whoami</h2>
+
+            <pre class="terminal">
+user: elliot
+status: cs (year 4) + philosophy
+school: university of alberta
+location: canada
+
+interests:
+  - film photography
+  - vinyl records
+  - av hardware
+  - linux
+  - jazz trumpet</pre>
+          </div>
+
+          <div class="media media--sm">
+            <img
+              src="resources/me-and-camera.jpg"
+              alt="One of my first film photos, an out of focus picture of myself in the mirror"
+            />
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+
+  <script>
+    const navHost = document.getElementById("nav-placeholder");
+
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        navHost.innerHTML = html;
+
+        // Determine current file (default to index.html)
+        const path = location.pathname.split("/").pop() || "index.html";
+
+        // Clear any accidental active states (defensive, but safe)
+        navHost.querySelectorAll(".filetree__item.is-active")
+          .forEach(a => a.classList.remove("is-active"));
+
+        // Mark current page as active
+        const link = navHost.querySelector(`a[href$="${path}"]`);
+        if (link) link.classList.add("is-active");
+
+        // Reveal nav only after it is fully injected
+        navHost.classList.add("is-loaded");
+      })
+      .catch(() => {
+        // Fail open: still reveal layout if nav fails to load
+        navHost.classList.add("is-loaded");
+      });
+  </script>
+
+</html>
+

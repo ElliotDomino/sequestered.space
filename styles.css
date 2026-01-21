@@ -1,3 +1,6 @@
+/* =========================
+   Reset
+========================= */
 * {
   box-sizing: border-box;
 }
@@ -11,451 +14,19 @@ body {
   margin: 0;
 }
 
-/* ========================= Theme + Tokens ========================= */
-:root {
-  /* Default tile size */
-  --tile-size: 96px;
-  /* Color Palette HEX */
-  --carbon-black: #222222ff;
-  --golden-glow: #ecd444ff;
-  --grey: #808080ff;
-  --white: #ffffffff;
-  --turquoise: #63e2c6ff;
-  /* Theme roles */
-  --bg: var(--carbon-black);
-  /* Surfaces */
-  --surface: rgba(255, 255, 255, 0.06);
-  --surface-2: rgba(255, 255, 255, 0.10);
-  /* Text */
-  --text-strong: var(--white);
-  --text: rgba(255, 255, 255, 0.92);
-  --text-muted: rgba(255, 255, 255, 0.70);
-  --text-faint: rgba(255, 255, 255, 0.50);
-  /* UI chrome */
-  --border: rgba(128, 128, 128, 0.45);
-  /* Accents */
-  --primary: var(--turquoise);
-  --secondary: var(--golden-glow);
-  /* Focus glow */
-  --focus: rgba(236, 212, 68, 0.55);
-  /* Sidebar sizing */
-  --sidebar-width: 320px;
-}
-
-/* ========================= Base page styling ========================= */
-body {
-  background-color: var(--bg);
-  background-image: url("/resources/background-tile.png");
-  background-repeat: repeat;
-  background-position: center center;
-  background-size: var(--tile-size) var(--tile-size);
-  color: var(--text);
-  font-family: monospace;
-}
-
-/* Typography */
-.page h1 {
-  color: var(--secondary);
-  letter-spacing: 0.08em;
-}
-
-.page h2 {
-  color: var(--primary);
-}
-
-.page h3 {
-  color: var(--text-muted);
-}
-
-.page li::before {
-  content: "> ";
-  color: var(--primary);
-}
-
-.page strong {
-  color: var(--secondary);
-  font-weight: 700;
-}
-
-p {
-  margin: 0 0 1em;
-  color: var(--text);
-}
-
-a {
-  color: var(--primary);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-a:hover {
-  text-decoration-thickness: 0.18em;
-}
-
-:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 3px;
-}
-
-/* ========================= Cards / Panels ========================= */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 16px;
-  overflow: visible;
-  /* do not globally clip */
-}
-
-.card:hover {
-  border-color: rgba(99, 226, 198, 0.6);
-}
-
-/* ========================= Layout ========================= */
-.layout {
-  min-height: 100%;
-  display: flex;
-  gap: 16px;
-  padding: 16px;
-}
-
-/* Sidebar */
-.sidebar {
-  width: var(--sidebar-width);
-  flex: 0 0 var(--sidebar-width);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Allow long "tree" lines without wrapping, but keep it contained */
-.sidebar.card {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-/* Main content */
-.page {
-  flex: 1;
-  min-height: 100%;
-  padding: 24px;
-}
-
-/* ========================= Sidebar Header (your class names) ========================= */
-.sidebar_header .title_text {
-  color: var(--text-strong);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.sidebar_header .title_subtext {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-top: 4px;
-}
-
-/* Footer badge */
-.sidebar__footer {
-  margin-top: auto;
-}
-
-.badge {
-  display: inline-block;
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  background: rgba(236, 212, 68, 0.18);
-  color: var(--secondary);
-}
-
-/* ========================= Tree-style file navigation ========================= */
-.filetree {
-  font-size: 0.95rem;
-  line-height: 1.45;
-  white-space: nowrap;
-  /* terminal-like */
-}
-
-.filetree__item {
-  display: block;
-  color: var(--text);
-  text-decoration: none;
-  padding: 2px 0;
-}
-
-.tree-prefix {
-  color: var(--text-muted);
-  white-space: pre;
-  /* preserve pipe spacing */
-}
-
-/* Folder (details/summary) */
-.filetree__folder {
-  margin: 0;
-  padding: 0;
-}
-
-.filetree__folder summary {
-  list-style: none;
-  cursor: pointer;
-}
-
-.filetree__folder summary::-webkit-details-marker {
-  display: none;
-}
-
-/* Folder line and subtle toggle on the right */
-.filetree__item.folder {
-  color: var(--text-strong);
-  position: relative;
-  padding-right: 28px;
-  /* space for toggle */
-}
-
-/* Toggle glyph (expects <span class="folder-toggle"></span> inside summary) */
-.folder-toggle::before {
-  content: "[+]";
-  position: absolute;
-  right: 0;
-  top: 0;
-  color: var(--text-muted);
-}
-
-.filetree__folder[open] .folder-toggle::before {
-  content: "[-]";
-}
-
-/* Children container: indentation handled by the text prefixes */
-.filetree__children {
-  margin: 0;
-  padding: 0;
-}
-
-/* Hover + active */
-.filetree__item:hover {
-  color: var(--primary);
-}
-
-.filetree__item.is-active {
-  color: var(--secondary);
-}
-
-/* Blinking cursor for active item */
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-.filetree__item.is-active::after {
-  content: " ▉";
-  animation: blink 1s step-end infinite;
-}
-
-/* ========================= Buttons (optional, kept from your earlier CSS) ========================= */
-.btn {
-  font: inherit;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text-strong);
-  cursor: pointer;
-}
-
-.btn--primary {
-  background: var(--primary);
-  color: var(--carbon-black);
-  border-color: rgba(99, 226, 198, 0.9);
-}
-
-.btn--secondary {
-  background: var(--secondary);
-  color: var(--carbon-black);
-  border-color: rgba(236, 212, 68, 0.9);
-}
-
-/* ========================= Responsive layout ========================= */
-@media (max-width: 720px) {
-  :root {
-    --sidebar-width: auto;
-  }
-
-  .layout {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: auto;
-    flex: 0 0 auto;
-  }
-
-  /* On small screens, allow wrapping so it doesn't force horizontal scroll */
-  .filetree {
-    white-space: normal;
-  }
-
-  .sidebar.card {
-    overflow-x: hidden;
-    overflow-y: visible;
-  }
-
-  /* On mobile, don't reserve nav space */
-  #nav-placeholder {
-    min-height: 0;
-  }
-
-  /* When collapsed, hide the placeholder entirely so content moves up */
-  .nav-toggle:checked ~ .layout #nav-placeholder {
-    display: none;
-  }
-}
-
-/* Slightly wider sidebar on big screens */
-@media (min-width: 1100px) {
-  :root {
-    --sidebar-width: 360px;
-  }
-}
-
-/* ========================= Collapsible sidebar toggle (CSS-only) ========================= */
-/* Hide the checkbox but keep it functional */
-.nav-toggle {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Make layout a positioning context for the hanging button */
-.layout {
-  position: relative;
-}
-
-/* Hanging button (outside the sidebar edge, not overlapping content) */
-.nav-toggle-btn {
-  background: var(--surface-2);
-  position: absolute;
-  top: 16px;
-  /* aligns with layout padding */
-  /* put the button's LEFT edge at the sidebar's RIGHT border */
-  left: calc(16px + var(--sidebar-width) - 1px);
-  z-index: 10;
-  padding: 8px 10px;
-  cursor: pointer;
-  user-select: none;
-  /* tab shape that "attaches" to the sidebar */
-  border-radius: 0 10px 10px 0;
-}
-
-/* Icon swaps via ::before */
-.nav-toggle-icon::before {
-  content: "⟨⟨";
-  color: var(--text-strong);
-}
-
-/* When collapsed: hide sidebar and remove the gap */
-.nav-toggle:checked~.layout {
-  gap: 0;
-}
-
-.nav-toggle:checked~.layout .sidebar {
-  width: 0;
-  flex: 0 0 0;
-  padding: 0;
-  border: 0;
-  margin: 0;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Move button to the left edge when collapsed */
-.nav-toggle:checked~.layout .nav-toggle-btn {
-  left: 16px;
-  /* layout padding */
-}
-
-/* Flip the icon when collapsed */
-.nav-toggle:checked~.layout .nav-toggle-icon::before {
-  content: "⟩⟩";
-}
-
-/* ========================= Tweaks ========================= */
-#nav-placeholder {
-  min-height: 200px;
-  /* prevents layout jump */
-}
-
-/* turn bullet points into ">" */
-.page ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.page li::before {
-  content: "> ";
-  color: var(--text-muted);
-}
-
-/* seperators with equals signs */
-.separator {
-  margin: 14px 0;
-  height: 1em;
-  background-image: repeating-linear-gradient(to right, currentColor, currentColor 0.9ch, transparent 0.9ch, transparent 1.05ch);
-  color: var(--text-faint);
-}
-
-/* ========================= Mobile layout: sidebar becomes top bar ========================= */
-@media (min-width: 480px) {
-  :root {
-    --tile-size: 112px;
-  }
-}
-
-@media (max-width: 720px) {
-  :root {
-    --sidebar-width: auto;
-  }
-
-  /* Stack layout vertically, reduce padding */
-  .layout {
-    flex-direction: column;
-    gap: 12px;
-    padding: 12px;
-  }
-
-  /* IMPORTANT: reorder so menu is first, then button, then page */
-  .sidebar {
-    order: 1;
-  }
-
-  .nav-toggle-btn {
-    order: 2;
-  }
-
-  .page {
-    order: 3;
-  }
-
-  /* Sidebar becomes full-width top panel */
-  .sidebar {/* =========================
-   Reset
-========================= */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-body { margin: 0; }
-
 /* =========================
    Theme + Tokens
 ========================= */
 :root {
-  /* Default tile size */
+  /* Background tile size */
   --tile-size: 96px;
 
-  /* Color Palette HEX */
-  --carbon-black: #222222ff;
-  --golden-glow:  #ecd444ff;
-  --grey:         #808080ff;
-  --white:        #ffffffff;
-  --turquoise:    #63e2c6ff;
+  /* Color Palette */
+  --carbon-black: #222222;
+  --golden-glow: #ecd444;
+  --grey: #808080;
+  --white: #ffffff;
+  --turquoise: #63e2c6;
 
   /* Theme roles */
   --bg: var(--carbon-black);
@@ -498,18 +69,7 @@ body {
   font-family: monospace;
 }
 
-/* Typography */
-h1, h2, h3 {
-  color: var(--text-strong);
-  letter-spacing: 0.02em;
-  margin: 0 0 0.5em;
-}
-
-p {
-  margin: 0 0 1em;
-  color: var(--text);
-}
-
+/* Links */
 a {
   color: var(--primary);
   text-decoration: underline;
@@ -525,6 +85,49 @@ a:hover {
   outline-offset: 3px;
 }
 
+/* Typography (scoped to page content) */
+.page h1 {
+  color: var(--secondary);
+  letter-spacing: 0.08em;
+  margin: 0 0 0.75em;
+}
+
+.page h2 {
+  color: var(--primary);
+  margin: 0 0 0.5em;
+}
+
+.page h3 {
+  color: var(--text-muted);
+  margin: 0 0 0.5em;
+}
+
+p {
+  margin: 0 0 1em;
+  color: var(--text);
+}
+
+.page strong {
+  color: var(--secondary);
+  font-weight: 700;
+}
+
+/* turn bullet points into ">" */
+.page ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0 0 1em;
+}
+
+.page li {
+  margin: 0.25em 0;
+}
+
+.page li::before {
+  content: "> ";
+  color: var(--text-muted);
+}
+
 /* =========================
    Cards / Panels
 ========================= */
@@ -535,6 +138,39 @@ a:hover {
   overflow: visible; /* do not globally clip */
 }
 
+.card:hover {
+  border-color: rgba(99, 226, 198, 0.6);
+}
+
+/* Terminal / pre */
+.terminal {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  color: var(--text-muted);
+  font-family: monospace;
+  line-height: 1.45;
+}
+
+/* =========================
+   Card + Media layout (NEW)
+   Use:
+   <section class="card card--with-media">
+     <div class="card__content">...</div>
+     <div class="media media--sm"><img ...></div>
+   </section>
+========================= */
+.card--with-media {
+  display: grid;
+  grid-template-columns: 1fr minmax(140px, 30%);
+  gap: 24px;
+  align-items: start;
+}
+
+.card__content {
+  min-width: 0;
+}
+
 /* =========================
    Layout
 ========================= */
@@ -543,21 +179,7 @@ a:hover {
   display: flex;
   gap: 16px;
   padding: 16px;
-}
-
-/* Sidebar */
-.sidebar {
-  width: var(--sidebar-width);
-  flex: 0 0 var(--sidebar-width);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Allow long "tree" lines without wrapping, but keep it contained */
-.sidebar.card {
-  overflow-x: auto;
-  overflow-y: hidden;
+  position: relative; /* anchor toggle button */
 }
 
 /* Main content */
@@ -568,8 +190,23 @@ a:hover {
 }
 
 /* =========================
-   Sidebar Header (your class names)
+   Sidebar (injected nav.html)
 ========================= */
+.sidebar {
+  width: var(--sidebar-width);
+  flex: 0 0 var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Allow long tree lines without wrapping, but keep it contained */
+.sidebar.card {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Sidebar header */
 .sidebar_header .title_text {
   color: var(--text-strong);
   font-size: 1.5rem;
@@ -584,7 +221,9 @@ a:hover {
 }
 
 /* Footer badge */
-.sidebar__footer { margin-top: auto; }
+.sidebar__footer {
+  margin-top: auto;
+}
 
 .badge {
   display: inline-block;
@@ -630,14 +269,13 @@ a:hover {
   display: none;
 }
 
-/* Folder line and subtle toggle on the right */
+/* Folder line and toggle on the right */
 .filetree__item.folder {
   color: var(--text-strong);
   position: relative;
   padding-right: 28px; /* space for toggle */
 }
 
-/* Toggle glyph (expects <span class="folder-toggle"></span> inside summary) */
 .folder-toggle::before {
   content: "[+]";
   position: absolute;
@@ -650,7 +288,6 @@ a:hover {
   content: "[-]";
 }
 
-/* Children container: indentation handled by the text prefixes */
 .filetree__children {
   margin: 0;
   padding: 0;
@@ -667,7 +304,9 @@ a:hover {
 
 /* Blinking cursor for active item */
 @keyframes blink {
-  50% { opacity: 0; }
+  50% {
+    opacity: 0;
+  }
 }
 
 .filetree__item.is-active::after {
@@ -676,7 +315,102 @@ a:hover {
 }
 
 /* =========================
-   Buttons (optional, kept from your earlier CSS)
+   Nav injection: prevent blink
+========================= */
+#nav-placeholder {
+  display: none; /* hidden until JS adds .is-loaded */
+}
+
+#nav-placeholder.is-loaded {
+  display: block;
+}
+
+/* =========================
+   Collapsible sidebar toggle (CSS-only)
+========================= */
+
+/* Hide the checkbox but keep it functional */
+.nav-toggle {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hanging toggle button */
+.nav-toggle-btn {
+  background: var(--surface-2);
+  position: absolute;
+  top: 16px; /* aligns with layout padding */
+  left: calc(16px + var(--sidebar-width) - 1px); /* attach to sidebar edge */
+  z-index: 10;
+  padding: 8px 10px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0 10px 10px 0;
+}
+
+.nav-toggle-icon::before {
+  content: "⟨⟨";
+  color: var(--text-strong);
+}
+
+/* Collapse: hide injected sidebar and remove gap */
+.nav-toggle:checked ~ .layout {
+  gap: 0;
+}
+
+.nav-toggle:checked ~ .layout #nav-placeholder > .sidebar {
+  display: none;
+}
+
+/* Move button to left edge when collapsed */
+.nav-toggle:checked ~ .layout .nav-toggle-btn {
+  left: 16px; /* layout padding */
+}
+
+/* Flip icon when collapsed */
+.nav-toggle:checked ~ .layout .nav-toggle-icon::before {
+  content: "⟩⟩";
+}
+
+/* =========================
+   Media (updated for right-column layout)
+   Use:
+   <div class="media media--sm"><img ...></div>
+========================= */
+.media {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  max-height: 240px;      /* optional safety cap */
+  object-fit: cover;
+  border-radius: 2px;
+  display: block;
+}
+
+/* =========================
+   Separator (equals-sign style)
+========================= */
+.separator {
+  margin: 14px 0;
+  height: 1em;
+  background-image: repeating-linear-gradient(
+    to right,
+    currentColor,
+    currentColor 0.9ch,
+    transparent 0.9ch,
+    transparent 1.05ch
+  );
+  color: var(--text-faint);
+}
+
+/* =========================
+   Buttons (optional)
 ========================= */
 .btn {
   font: inherit;
@@ -703,148 +437,15 @@ a:hover {
    Responsive layout
 ========================= */
 @media (max-width: 720px) {
-  :root { --sidebar-width: auto; }
-
-  .layout { flex-direction: column; }
-  .sidebar { width: auto; flex: 0 0 auto; }
-
-  /* On small screens, allow wrapping so it doesn't force horizontal scroll */
-  .filetree { white-space: normal; }
-  .sidebar.card { overflow-x: hidden; overflow-y: visible; }
-}
-
-/* Slightly wider sidebar on big screens (optional) */
-@media (min-width: 1100px) {
-  :root { --sidebar-width: 360px; }
-}
-
-/* =========================
-   Collapsible sidebar toggle (CSS-only)
-========================= */
-
-/* Hide the checkbox but keep it functional */
-.nav-toggle {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Hide nav area until nav.html has been injected */
-#nav-placeholder {
-  display: none; /* prevents blink + prevents reserving space */
-}
-
-/* Once loaded (JS adds .is-loaded), show it */
-#nav-placeholder.is-loaded {
-  display: block;
-}
-
-/* Make layout a positioning context for the hanging button */
-.layout {
-  position: relative;
-}
-
-/* Hanging button (outside the sidebar edge, not overlapping content) */
-.nav-toggle-btn {
-  background: var(--surface-2);
-  position: absolute;
-  top: 16px; /* aligns with layout padding */
-
-  /* put the button's LEFT edge at the sidebar's RIGHT border */
-  left: calc(16px + var(--sidebar-width) - 1px);
-
-  z-index: 10;
-  padding: 8px 10px;
-  cursor: pointer;
-  user-select: none;
-
-  /* tab shape that "attaches" to the sidebar */
-  border-radius: 0 10px 10px 0;
-}
-
-/* Icon swaps via ::before */
-.nav-toggle-icon::before {
-  content: "⟨⟨";
-  color: var(--text-strong);
-}
-
-/* Default: ensure injected sidebar is shown (once placeholder is loaded) */
-#nav-placeholder.is-loaded > .sidebar {
-  display: block;
-}
-
-/* When collapsed: remove the gap and hide the injected sidebar entirely */
-.nav-toggle:checked ~ .layout {
-  gap: 0;
-}
-
-.nav-toggle:checked ~ .layout #nav-placeholder > .sidebar {
-  display: none;
-}
-
-/* Move button to the left edge when collapsed */
-.nav-toggle:checked ~ .layout .nav-toggle-btn {
-  left: 16px; /* layout padding */
-}
-
-/* Flip the icon when collapsed */
-.nav-toggle:checked ~ .layout .nav-toggle-icon::before {
-  content: "⟩⟩";
-}
-
-/* =========================
-   Tweaks
-========================= */
-
-/* turn bullet points into ">" */
-.page ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.page li::before {
-  content: "> ";
-  color: var(--text-muted);
-}
-
-/* seperators with equals signs */
-.separator {
-  margin: 14px 0;
-  height: 1em;
-  background-image: repeating-linear-gradient(
-    to right,
-    currentColor,
-    currentColor 0.9ch,
-    transparent 0.9ch,
-    transparent 1.05ch
-  );
-  color: var(--text-faint);
-}
-
-/* =========================
-   Mobile layout: sidebar becomes top bar
-========================= */
-
-@media (min-width: 480px) {
-  :root { --tile-size: 112px; }
-}
-
-@media (max-width: 720px) {
   :root {
     --sidebar-width: auto;
   }
 
-  /* Stack layout vertically, reduce padding */
   .layout {
     flex-direction: column;
     gap: 12px;
     padding: 12px;
   }
-
-  /* IMPORTANT: reorder so menu is first, then button, then page */
-  .sidebar { order: 1; }
-  .nav-toggle-btn { order: 2; }
-  .page { order: 3; }
 
   /* Sidebar becomes full-width top panel */
   .sidebar {
@@ -853,7 +454,7 @@ a:hover {
     gap: 12px;
   }
 
-  /* Keep tree readable and prevent horizontal scroll on mobile */
+  /* Allow wrapping so it doesn't force horizontal scroll */
   .filetree {
     white-space: normal;
   }
@@ -863,66 +464,14 @@ a:hover {
     overflow-y: visible;
   }
 
-  /* Main content: less padding and centered */
+  /* Main content tighter */
   .page {
     padding: 12px;
     max-width: 780px;
     margin: 0 auto;
   }
 
-  /* Toggle button: positioned BELOW the sidebar (top menu) */
-  .nav-toggle-btn {
-    position: static;
-    left: auto;
-    top: auto;
-
-    display: inline-block;
-    align-self: flex-start;
-    margin-top: 6px;
-    padding: 8px 10px;
-    border-radius: 10px;
-  }
-
-  /* When collapsed on mobile: hide sidebar */
-  .nav-toggle:checked ~ .layout .sidebar {
-    display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  :root { --tile-size: 140px; }
-}
-
-@media (min-width: 1200px) {
-  :root { --tile-size: 172px; }
-}
-
-@media (min-resolution: 2dppx) {
-  :root { --tile-size: calc(var(--tile-size) * 1.15); }
-}
-    width: 100%;
-    flex: 0 0 auto;
-    gap: 12px;
-  }
-
-  /* Keep tree readable and prevent horizontal scroll on mobile */
-  .filetree {
-    white-space: normal;
-  }
-
-  .sidebar.card {
-    overflow-x: hidden;
-    overflow-y: visible;
-  }
-
-  /* Main content: less padding and centered */
-  .page {
-    padding: 12px;
-    max-width: 780px;
-    margin: 0 auto;
-  }
-
-  /* Toggle button: positioned BELOW the sidebar (top menu) */
+  /* Button behaves like a normal pill below the sidebar */
   .nav-toggle-btn {
     position: static;
     left: auto;
@@ -930,19 +479,45 @@ a:hover {
     display: inline-block;
     align-self: flex-start;
     margin-top: 6px;
-    padding: 8px 10px;
     border-radius: 10px;
   }
 
-  /* When collapsed on mobile: hide sidebar */
-  .nav-toggle:checked~.layout .sidebar {
+  /* On mobile, if collapsed, hide the placeholder so content moves up */
+  .nav-toggle:checked ~ .layout #nav-placeholder {
     display: none;
+  }
+
+  /* Stack media under text on small screens */
+  .card--with-media {
+    grid-template-columns: 1fr;
+  }
+
+  .media {
+    margin-top: 12px;
+  }
+
+  .media img {
+    max-height: none;
+  }
+
+}
+
+/* Tile sizing adjustments */
+@media (min-width: 480px) {
+  :root {
+    --tile-size: 112px;
   }
 }
 
 @media (min-width: 768px) {
   :root {
     --tile-size: 140px;
+  }
+}
+
+@media (min-width: 1100px) {
+  :root {
+    --sidebar-width: 360px;
   }
 }
 
@@ -957,3 +532,4 @@ a:hover {
     --tile-size: calc(var(--tile-size) * 1.15);
   }
 }
+
