@@ -134,6 +134,7 @@ a:hover {
 ========================= */
 .sidebar_header .title_text {
   color: var(--text-strong);
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -295,66 +296,68 @@ a:hover {
   position: relative;
 }
 
-/* Hanging button */
+/* Hanging button (outside the sidebar edge, not overlapping content) */
 .nav-toggle-btn {
+  background: var(--surface-2);
   position: absolute;
   top: 16px; /* aligns with layout padding */
-  left: calc(16px + var(--sidebar-width) - 14px); /* "hang" over sidebar edge */
-  z-index: 10;
 
+  /* put the button's LEFT edge at the sidebar's RIGHT border */
+  left: calc(16px + var(--sidebar-width) - 1px);
+
+  z-index: 10;
   padding: 8px 10px;
   cursor: pointer;
   user-select: none;
 
-  /* Make it look like a little tab */
-  border-radius: 10px;
+  /* tab shape that "attaches" to the sidebar */
+  border-radius: 0 10px 10px 0;
 }
 
-/* Icon style */
-.nav-toggle-icon {
+/* Icon swaps via ::before */
+.nav-toggle-icon::before {
+  content: "⟨⟨";
   color: var(--text-strong);
 }
 
-/* When collapsed: hide sidebar, shift button to the left edge */
-.nav-toggle:checked ~ .layout .sidebar {
-  width: 0;
-  flex-basis: 0;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
+/* When collapsed: hide sidebar and remove the gap */
+.nav-toggle:checked ~ .layout {
+  gap: 0;
 }
 
-/* Move button to hang at the left edge when collapsed */
+.nav-toggle:checked ~ .layout .sidebar {
+  width: 0;
+  flex: 0 0 0;
+  padding: 0;
+  border: 0;
+  margin: 0;
+
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Move button to the left edge when collapsed */
 .nav-toggle:checked ~ .layout .nav-toggle-btn {
   left: 16px; /* layout padding */
 }
 
 /* Flip the icon when collapsed */
-.nav-toggle:checked ~ .layout .nav-toggle-icon {
-  content: "";
-}
 .nav-toggle:checked ~ .layout .nav-toggle-icon::before {
   content: "⟩⟩";
 }
 
-/* Smooth transitions */
-.sidebar,
-.nav-toggle-btn {
-  transition: width 200ms ease, flex-basis 200ms ease, left 200ms ease, padding 200ms ease;
-}
-
-/* Mobile: make the button sit above nicely */
+/* Mobile: button placement + simplest collapse behavior */
 @media (max-width: 720px) {
   .nav-toggle-btn {
     left: 16px;
-    top: 16px;
+    border-radius: 10px;
   }
 
   .nav-toggle:checked ~ .layout .sidebar {
-    display: none; /* simplest on mobile */
+    display: none;
   }
 }
-
 
 /* =========================
    Background tile scaling
@@ -375,3 +378,6 @@ a:hover {
   :root { --tile-size: calc(var(--tile-size) * 1.15); }
 }
 
+/* ==========================
+   Kill all animations!!
+========================== */
