@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Boids Javascript | sequestered.space</title>
+    <link rel="icon" type="image/x-icon" href="/resources/icon.ico" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+
+  <body>
+    <input class="nav-toggle" type="checkbox" id="nav-toggle" />
+
+    <div class="layout">
+      <label class="nav-toggle-btn card" for="nav-toggle" aria-label="Toggle sidebar">
+        <span class="nav-toggle-icon" aria-hidden="true"></span>
+      </label>
+
+      <div id="nav-placeholder"></div>
+
+      <main class="page">
+        <!-- ===== Page header ===== -->
+        <h1>Boids Implementation in Javascript</h1>
+
+        <section class="card">
+          <p class="muted">
+            <strong>Status:</strong> in progress •
+            <strong>Date:</strong> 2026-01-21 •
+            <strong>Tags:</strong> javascript, boids, algorithms
+          </p>
+
+          <p>
+            The Boids algorithm was developed in 1986 by Craig Reynolds in order to mimic the flocking and flying behaviour of birds. The name "Boid" refers to a bird-oid object, an object that can move in a way similar to that of a flock of birds. 
+          </p>
+        </section>
+
+        <div class="separator"></div>
+
+        <!-- ===== Hero / media + quick facts ===== -->
+        <section class="card card--with-media">
+          <div class="card__content">
+            <h2>$ summary</h2>
+
+            <p>
+              The boids algorithm itself only relies on three main concepts. The first concept is <strong>seperation</strong>, the orienting of a boid away from those that are in the vicinity. The second is <strong>alignment</strong>, or heading in the average direction of those in the vicinity. The last concept is <strong>cohesion</strong>, or the preference to be at the center of mass of those in the vicinity.
+            </p>
+
+            <p>
+              The <a target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Boids">wikipedia article</a> on the boids algorithm goes into greater detail, and has a great visual aid for the three concepts.
+            </p>
+
+            <p>
+              The combined effect of seperation, alignment, and cohesion results in <strong>emergent behaviour</strong> that looks surprisingly like a flock of birds.
+            </p>
+
+          </div>
+
+          <div class="media media--sm">
+            <img
+              src="../projects/boids-js/boids-image.png"
+              alt="A screenshot from the boids page showing an arrangement of boids in a few flocks."
+            />
+          </div>
+        </section>
+
+        <div class="separator"></div>
+
+        <!-- ===== Context ===== -->
+        <section class="card">
+          <h2>Context</h2>
+
+          <p>
+            I wanted to try a project in Javascript just to get more familiar with the language, as it does not seem to agree with me. This was just a way for me to practice a bit. You can find the link for the Github page below, and you can also find the demo link below to run the boids simulation for yourself! (Try resizing the window and refreshing to see how the boids change behaviour)
+          </p>
+        </section>
+
+        <div class="separator"></div>
+
+        <!-- ===== Links ===== -->
+        <section class="card">
+          <h2>Links</h2>
+
+          <ul>
+            <li>
+              <strong>Repo:</strong>
+              <a href="https://github.com/ElliotDomino/BoidsJS/" target="_blank" rel="noopener noreferrer">
+                https://github.com/ElliotDomino/BoidsJS/
+              </a>
+            </li>
+            <li>
+              <strong>Demo:</strong>
+              <a href="/projects/boids-js/index.html" target="_blank" rel="noopener noreferrer">
+                /projects/boids-js/index.html
+              </a>
+            </li>
+          </ul>
+        </section>
+
+      </main>
+    </div>
+
+    <script src="/nav-loader.js" defer></script>
+
+  </body>
+</html>
+

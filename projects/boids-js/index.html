@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boids Simulation in JavaScript</title>
+
+    <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #e0f7fa, #e0f2f1);
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        min-height: 100vh;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #006064;
+    }
+
+    p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        color: #004d40;
+    }
+
+    canvas {
+        border: 2px solid #004d40;
+        background-color: white;
+        width: 80%;
+        height: auto;
+        width: auto;
+        aspect-ratio: 16 / 9;
+        max-width: 100%;
+        display: block;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+    }
+    </style>
+</head>
+<body>
+    <h1>Boids Algorithm!</h1>
+    <p>Originally developed by Craig Reynolds, implemented by Elliot Chrystal for practice using JavaScript</p>
+
+    <canvas id="boidSky"></canvas>
+
+    <script src="boids.js"></script>
+</body>
+</html>
