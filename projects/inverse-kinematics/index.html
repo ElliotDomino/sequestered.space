@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inverse Kinematics in JavaScript with P5</title>
+
+    <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #e0f7fa, #e0f2f1);
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        min-height: 100vh;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #006064;
+    }
+
+    p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        color: #004d40;
+    }
+
+    canvas {
+    display: block;
+    border: 2px solid #004d40;
+    background-color: white;
+    }
+    </style>
+</head>
+<body>
+    <h1>Inverse Kinematics!</h1>
+    <p>Implemented by Elliot Chrystal for practice using JavaScript</p>
+
+    <div id="sketch-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+    <script src="inverse-kinematics.js"></script>
+</body>
+</html>
