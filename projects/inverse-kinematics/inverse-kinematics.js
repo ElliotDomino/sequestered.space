@@ -68,14 +68,6 @@ function touchStarted() {
   if (touches.length > 0) {
     updateTarget(touches[0].x, touches[0].y);
   }
-  return false;
-}
-
-function touchMoved() {
-  if (touches.length > 0) {
-    updateTarget(touches[0].x, touches[0].y);
-  }
-  return false;
 }
 
 function getAngle(vector) {

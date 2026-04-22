@@ -6,54 +6,92 @@
     <title>Inverse Kinematics in JavaScript with P5</title>
 
     <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(to right, #e0f7fa, #e0f2f1);
-        color: #333;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 2rem;
-        min-height: 100vh;
-    }
+        html, body {
+            width: 100%;
+            min-height: 100%;
+        }
 
-    h1 {
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
-        color: #006064;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #e0f2f1);
+            color: #333;
+            padding: 2rem 1rem;
+        }
 
-    p {
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-        color: #004d40;
-    }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #006064;
+            text-align: center;
+        }
 
-    canvas {
-    display: block;
-    border: 2px solid #004d40;
-    background-color: white;
-    }
+        body > p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #004d40;
+            text-align: center;
+        }
 
-    #controls p {
-      margin: 0 0 4px 0;
-    }
+        #content {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #sketch-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        #controls {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 2rem;
+        }
+
+        .control-group {
+            width: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .control-group p {
+            margin: 0 0 4px 0;
+            text-align: center;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+        }
+
+        canvas {
+            display: block;
+            border: 2px solid #004d40;
+            background-color: white;
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
     <h1>Inverse Kinematics!</h1>
     <p>CCD Inverse Kinematics implemented by Elliot Chrystal for practice using JavaScript</p>
 
-    <center>
+    <div id="content">
       <div id="sketch-container"></div>
       <div id="controls"></div>
-    </center>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
     <script src="inverse-kinematics.js"></script>
