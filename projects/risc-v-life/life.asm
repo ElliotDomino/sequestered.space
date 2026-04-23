@@ -6,7 +6,9 @@ frameBuffer:	.space 4096	# aligned on words
 gridWidth:	.word 8
 gridHeight:	.word 8
 refreshRate:	.word 100	# milliseconds
-gridSeed:	.string "abcdefgh"
+gridSeed:
+    #.byte 0x48, 0x65, 0x6C, 0x6C, 0x6F				# H e l l o
+    .byte 0x00, 0x42, 0x42, 0x00, 0x00, 0x42, 0x3C, 0x00	# Smiley Face
 gridSeedEnd:
 
 .text
@@ -178,8 +180,7 @@ zeroDone:
 	
 	la t0, gridSeed		# t0 = seed start
 	la t1, gridSeedEnd	# t1 = seed end
-	sub t1, t1, t0		# t1 = total bytes (including null terminator)
-	addi t1, t1, -1		# t1 = total bytes (excluding null terminator)
+	sub t1, t1, t0		# t1 = total bytes
 	
 	# if seed size <= 0, then there is nothing to copy
 	bge zero, t1, copyDone
