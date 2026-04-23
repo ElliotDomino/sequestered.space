@@ -7,8 +7,8 @@ gridWidth:	.word 8
 gridHeight:	.word 8
 refreshRate:	.word 100	# milliseconds
 gridSeed:
-    #.byte 0x48, 0x65, 0x6C, 0x6C, 0x6F				# H e l l o
-    .byte 0x00, 0x42, 0x42, 0x00, 0x00, 0x42, 0x3C, 0x00	# Smiley Face
+    .byte 0x48, 0x65, 0x6C, 0x6C, 0x6F				# H e l l o
+    #.byte 0x00, 0x42, 0x42, 0x00, 0x00, 0x42, 0x3C, 0x00	# Smiley Face
 gridSeedEnd:
 
 .text
@@ -298,8 +298,152 @@ renderDone:
 	lw ra, 20(sp)
 	addi sp, sp, 24
 	ret
+
+#====================================================
+# getCellSafe
+# Returns cell value at given row and col if in bounds
+# Otherwise return 0.
+#
+# Inputs:  a0 = row
+#          a1 = col
+#          a2 = grid base address
+#
+# Output:  a0 = cell value (0 or 1)
+#====================================================
+getCellSafe:
+    # row < 0 ?
+    bltz a0, getCellSafeDead
+
+    # col < 0 ?
+    bltz a1, getCellSafeDead
+
+    # row >= gridHeight ?
+    lw t0, gridHeight
+    bge a0, t0, getCellSafeDead
+
+    # col >= gridWidth ?
+    lw t0, gridWidth
+    bge a1, t0, getCellSafeDead
+
+    # otherwise valid cell
+    call getCell
+    ret
+
+getCellSafeDead:
+    li a0, 0
+    ret
+
+#====================================================
+# countNeighbors
+# Counts the number of live neighbors surrounding a cell.
+#
+# Inputs: a0 = row
+#	  a1 = col
+#	  a2 = grid base address
+#
+# Output: a0 = number of live neighbors (0 to 8)
+#====================================================
+countNeighbors:
+	addi sp, sp, -20
+	sw ra, 16(sp)
+	sw s0, 12(sp)
+	sw s1, 8(sp)
+	sw s2, 4(sp)
+	sw s3, 0(sp)
 	
+	mv s0, a0  # s0 = row
+	mv s1, a1  # s1 = col
+	mv s2, a2  # s2 = grid base
+	li s3, 0   # s3 = neighbor count
 	
+	# (row-1, col-1)
+	addi a0, s0, -1
+	addi a1, s1, -1
+	mv a2, s2
+	call getCellSafe
+	add s3, s3, a0
+	
+	# (row-1, col)
+	addi a0, s0, -1
+	mv a1, s1
+	mv a2, s2
+	call getCellSafe
+	add s3, s3, a0
+	
+	# (row-1, col+1)
+	addi a0, s0, -1
+	addi a1, s1, 1
+	mv a2, s2
+	call getCellSafe
+	add s3, s3, a0
+	
+	# (row, col-1)
+	mv a0, s0
+	addi a1, s1, -1
+	mv a2, s2
+	call getCellSafe
+	add s3, s3, a0
+	
+	# (row, col+1)
+	mv a0, s0
+	addi a1, s1, 1
+	mv a2, s2
+	call getCellSafe
+	add s3, s3, a0
+	
+	# (row+1, col-1)
+	addi a0, s0, 1
+	addi a1, s1, -1
+	mv a2, s2
+	call getCellSafe
+	add s3, s3, a0
+	
+	# (row+1, col)
+	addi a0, s0, 1
+	mv a1, s1
+	mv a2, s2
+	call getCellSafe
+	add s3, s3, a0
+	
+	# (row+1, col+1)
+	addi a0, s0, 1
+	addi a1, s1, 1
+	mv a2, s2
+	call getCellSafe
+	add s3, s3, a0
+	
+	mv a0, s3  # return count in a0
+	
+	lw s3, 0(sp)
+	lw s2, 4(sp)
+	lw s1, 8(sp)
+	lw s0, 12(sp)
+	lw ra, 16(sp)
+	addi sp, sp, 20
+	ret
+
+#====================================================
+# conwayStep
+# Manipulates the given grid to follow the four
+# rules of Conway's Game Of Life:
+#
+# - Any live cell with fewer than two live neighbours
+# dies, as if by underpopulation.
+#
+# - Any live cell with two or three live neighbours
+# lives on to the next generation
+#
+# - Any live cell with more than three live neighbours
+# dies, as if by overpopulation
+#
+# - Any dead cell with exactly three live neighbours
+# becomes a live cell, as if by reproduction.
+#
+# Inputs:  a0 = source grid base address
+#	   a1 = destination grid base address
+#
+# Output:  none
+#====================================================
 	
 	
 	
