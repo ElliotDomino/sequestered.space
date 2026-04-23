@@ -2,8 +2,9 @@
 # Configuration settings
 gridWidth:	.word 20
 gridHeight:	.word 15
-refreshRate:	.word 100     # milliseconds
-gridSeed:	.word 12345
+refreshRate:	.word 100	# milliseconds
+gridSeed:	.string "Hello"
+gridSeedEnd:
 
 .text
 .globl main
@@ -32,7 +33,7 @@ main:
 # address can hold up to 8 "cells" (being 1 or 0 for
 # on or off)
 #
-# No inputs.
+# Inputs: none
 # 
 # Outputs: a0 = pointer to allocated grid start
 #====================================================
@@ -81,15 +82,76 @@ getCellAddress:
 	
 #====================================================
 # seedGrid
-# Writes gridSeed into the grid, then fills any
-# remaining cells with 0.
+# Copies gridSeed into the bit-packed grid.
+# - If the seed is shorter than the grid, the rest
+#   of the grid is filled with 0s.
+# - If the seed is longer than the grid, it is cut off.
+# - If the grid size is not a multiple of 8 bits,
+#   the unused bits in the final byte are cleared.
 #
-# If the grid has fewer than 32 cells, only the
-# lowest needed bits of gridSeed are used.
+# Input: a0 = grid base address
 #
-# Input:
-#   a0 = grid base address
-#
-# Output:
-#   none
+# Output: none
 #====================================================
+seedGrid:
+	mv t6, a0	# save the address of the grid start in t6
+	
+	# totalBits = width * height
+	lw t0, gridWidth
+	lw t1, gridHeight
+	mul t2, t0, t1	# t2 = totalBits
+	
+	# totalbytes = (totalBits + 7) / 8
+	addi t3, t2, 7
+	srli, t3, t3, 3	# t3 = totalBytes
+	
+	# Zero the whole grid before setting seed
+	mv t4, t6	# current byte pointer is t4
+	mv t5, t3	# byte counter is t5	
+zeroLoop:
+	beqz t5, zeroDone	# branch to zeroDone when t5 is equal to 0
+	sb zero, 0(t4)
+	addi t4, t4, 1		# increment t4
+	addi t5, t5, -1		# decrement t5
+	j zeroLoop
+zeroDone:
+	# begin the copy of gridSeed into grid
+	
+	la t0, gridSeed		# t0 = seed start
+	la t1, gridSeedEnd	# t1 = seed end
+	sub t1, t1, t0		# t1 = total bytes (including null terminator)
+	addi t1, t1, -1		# t1 = total bytes (exclusing null terminator)
+	
+	# if seed size <= 0, then there is nothing to copy
+	bge zero, t1, maskFinalByte
+	
+	# bytesToCopy = min(gridBytes, seedSize)
+	blt t3, t1, useGridBytes
+	mv t5, t1
+	j copyStart
+useGridBytes:
+	mv t5, t3
+
+copyStart:
+	# by here, t5 is either set to gridBytes (t3) or seedSize (t1)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
