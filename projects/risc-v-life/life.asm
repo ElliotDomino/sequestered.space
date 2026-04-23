@@ -5,10 +5,12 @@ frameBuffer:	.space 4096	# aligned on words
 # Configuration settings
 gridWidth:	.word 8
 gridHeight:	.word 8
-refreshRate:	.word 100	# milliseconds
+haltLength:	.word 1000	# milliseconds
 gridSeed:
-    .byte 0x48, 0x65, 0x6C, 0x6C, 0x6F				# H e l l o
+    #.byte 0x48, 0x65, 0x6C, 0x6C, 0x6F				# H e l l o
     #.byte 0x00, 0x42, 0x42, 0x00, 0x00, 0x42, 0x3C, 0x00	# Smiley Face
+    .byte 0x40, 0x20, 0xE0					# Glider
+    #.byte 0x00, 0x00, 0x1C, 0x38				# Toad
 gridSeedEnd:
 
 .text
@@ -20,18 +22,68 @@ gridSeedEnd:
 # board, sets its initial values, 
 #====================================================
 main:
+
+	# Start by initializing the second grid in memory
+	call allocateGrid
+	mv s1, a0	# s1 holds pointer to second grid
+
 	# Start by initializing the grid in memory
 	call allocateGrid
-	mv s0, a0	# s0 will hold address to grid
+	mv s0, a0	# s0 holds pointer to first grid
 	
-	# Next, set the initial state of the grid based on the gridSeed
+	# Next, set the initial state of grid zero based on the gridSeed
 	call seedGrid	# address of grid already in a0
-	
-	# render grid to bitmap framebuffer
+
+mainLoopActiveZero:
+	# render grid zero to bitmap framebuffer
 	mv a0, s0
 	la a1, frameBuffer
 	call renderGrid
 	
+	# pause for a time
+	lw a0, haltLength	# load milliseconds into a0
+	li a7, 32		# sleep syscall
+	ecall
+	
+	# compute next step into s1
+	mv a0, s0
+	mv a1, s1
+	call conwayStep
+	
+	# check if new grid == old grid
+	mv a0, s0
+	mv a1, s1
+	call gridsEqual
+	bnez a0, mainLoopEnd
+	
+	# now the active grid should be grid 1
+
+mainLoopActiveOne:
+	# render grid one to bitmap framebuffer
+	mv a0, s1
+	la a1, frameBuffer
+	call renderGrid
+	
+	# pause for a time
+	lw a0, haltLength	# load milliseconds into a0
+	li a7, 32		# sleep syscall
+	ecall
+	
+	# compute next step into s0
+	mv a0, s1
+	mv a1, s0
+	call conwayStep
+	
+	# check if new grid == old grid
+	mv a0, s0
+	mv a1, s1
+	call gridsEqual
+	bnez a0, mainLoopEnd
+	
+	# now the active grid should be grid 0
+	j mainLoopActiveZero
+
+mainLoopEnd:
 	# exit the program
 	li a7, 10
     	ecall
@@ -300,6 +352,47 @@ renderDone:
 	ret
 
 #====================================================
+# setCell
+# Sets cell at given row and col to value 0 or 1
+#
+# Inputs:  a0 = row
+#          a1 = col
+#          a2 = grid base address
+#          a3 = value (0 or 1)
+#
+# Output:  none
+#====================================================
+setCell:
+	addi sp, sp, -4
+	sw ra, 0(sp)
+
+	call getCellAddress     # returns a0 = byte address, a1 = bit offset
+
+	lb t0, 0(a0)            # current byte
+
+	li t1, 7
+	sub t1, t1, a1          # MSB-first bit order
+	li t2, 1
+	sll t2, t2, t1          # t2 = mask
+
+	beqz a3, setCell_clear
+
+setCell_set:
+	or t0, t0, t2
+	sb t0, 0(a0)
+	j setCell_done
+
+setCell_clear:
+	not t2, t2
+	and t0, t0, t2
+	sb t0, 0(a0)
+
+setCell_done:
+	lw ra, 0(sp)
+	addi sp, sp, 4
+	ret
+
+#====================================================
 # getCellSafe
 # Returns cell value at given row and col if in bounds
 # Otherwise return 0.
@@ -311,27 +404,26 @@ renderDone:
 # Output:  a0 = cell value (0 or 1)
 #====================================================
 getCellSafe:
-    # row < 0 ?
-    bltz a0, getCellSafeDead
+	# row < 0 ?
+	bltz a0, getCellSafeDead
 
-    # col < 0 ?
-    bltz a1, getCellSafeDead
+	# col < 0 ?
+	bltz a1, getCellSafeDead
 
-    # row >= gridHeight ?
-    lw t0, gridHeight
-    bge a0, t0, getCellSafeDead
+	# row >= gridHeight ?
+	lw t0, gridHeight
+	bge a0, t0, getCellSafeDead
 
-    # col >= gridWidth ?
-    lw t0, gridWidth
-    bge a1, t0, getCellSafeDead
+	# col >= gridWidth ?
+	lw t0, gridWidth
+	bge a1, t0, getCellSafeDead
 
-    # otherwise valid cell
-    call getCell
-    ret
+	# otherwise valid cell
+	j getCell
 
 getCellSafeDead:
-    li a0, 0
-    ret
+	li a0, 0
+	ret
 
 #====================================================
 # countNeighbors
@@ -351,10 +443,10 @@ countNeighbors:
 	sw s2, 4(sp)
 	sw s3, 0(sp)
 	
-	mv s0, a0  # s0 = row
-	mv s1, a1  # s1 = col
-	mv s2, a2  # s2 = grid base
-	li s3, 0   # s3 = neighbor count
+	mv s0, a0	# s0 = row
+	mv s1, a1	# s1 = col
+	mv s2, a2	# s2 = grid base
+	li s3, 0	# s3 = neighbor count
 	
 	# (row-1, col-1)
 	addi a0, s0, -1
@@ -412,7 +504,7 @@ countNeighbors:
 	call getCellSafe
 	add s3, s3, a0
 	
-	mv a0, s3  # return count in a0
+	mv a0, s3	# return count in a0
 	
 	lw s3, 0(sp)
 	lw s2, 4(sp)
@@ -444,14 +536,132 @@ countNeighbors:
 #
 # Output:  none
 #====================================================
+conwayStep:
+	addi sp, sp, -28
+	sw ra, 24(sp)
+	sw s0, 20(sp)
+	sw s1, 16(sp)
+	sw s2, 12(sp)
+	sw s3, 8(sp)
+	sw s4, 4(sp)
+	sw s5, 0(sp)
 	
+	mv s0, a0	# s0 = source grid
+	mv s1, a1	# s1 = destination grid
+	li s2, 0	# s2 = row
 	
+conwayRowLoop:
+	lw t0, gridHeight
+	bge s2, t0, conwayDone
 	
+	li s3, 0   # s3 = col
 	
+conwayColLoop:
+	lw t0, gridWidth
+	bge s3, t0, conwayNextRow
 	
+	# current cell state
+	mv a0, s2
+	mv a1, s3
+	mv a2, s0
+	call getCell
+	mv s4, a0  # s4 = current cell (0 or 1)
 	
+	# neighbor count
+	mv a0, s2
+	mv a1, s3
+	mv a2, s0
+	call countNeighbors
+	mv s5, a0  # s5 = neighbor count
 	
+	# Decide next state in t1
+	beqz s4, conwayDeadCell
 	
+	# Live cell rules
+	li t0, 2
+	blt s5, t0, conwaySetDead
 	
+	li t0, 3
+	ble s5, t0, conwaySetLive
 	
+	j conwaySetDead
 	
+conwayDeadCell:
+	li t0, 3
+	beq s5, t0, conwaySetLive
+	j conwaySetDead
+	
+conwaySetLive:
+	li t1, 1
+	j conwayWriteCell
+	
+conwaySetDead:
+	li t1, 0
+	
+conwayWriteCell:
+	mv a0, s2	# row
+	mv a1, s3	# col
+	mv a2, s1	# destination grid
+	mv a3, t1	# new value
+	call setCell
+	
+	addi s3, s3, 1
+	j conwayColLoop
+	
+conwayNextRow:
+	addi s2, s2, 1
+	j conwayRowLoop
+	
+conwayDone:
+	lw s5, 0(sp)
+	lw s4, 4(sp)
+	lw s3, 8(sp)
+	lw s2, 12(sp)
+	lw s1, 16(sp)
+	lw s0, 20(sp)
+	lw ra, 24(sp)
+	addi sp, sp, 28
+	ret
+
+#====================================================
+# gridsEqual
+# Checks whether two bit-packed grids are identical.
+#
+# Inputs:  a0 = first grid base address
+#          a1 = second grid base address
+#
+# Output:  a0 = 1 if equal, 0 if different
+#====================================================
+gridsEqual:
+	# totalBits = gridWidth * gridHeight
+	lw t0, gridWidth
+	lw t1, gridHeight
+	mul t2, t0, t1
+	
+	# totalBytes = (totalBits + 7) / 8
+	addi t2, t2, 7
+	srli t2, t2, 3
+	
+	li t3, 0	# byte index = 0
+	
+gridsEqualLoop:
+	bge t3, t2, gridsEqualYes
+	
+	add t4, a0, t3		# address in first grid
+	add t5, a1, t3		# address in second grid
+	
+	lb t6, 0(t4)		# byte from first grid
+	lb t0, 0(t5)		# byte from second grid
+	
+	bne t6, t0, gridsEqualNo
+	
+	addi t3, t3, 1
+	j gridsEqualLoop
+
+gridsEqualYes:
+	li a0, 1
+	ret
+
+gridsEqualNo:
+	li a0, 0
+	ret
