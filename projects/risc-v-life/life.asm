@@ -1,9 +1,12 @@
 .data
+# Display settings
+.align 2
+frameBuffer:	.space 4096	# aligned on words
 # Configuration settings
-gridWidth:	.word 20
-gridHeight:	.word 15
+gridWidth:	.word 8
+gridHeight:	.word 8
 refreshRate:	.word 100	# milliseconds
-gridSeed:	.string "Hello"
+gridSeed:	.string "abcdefgh"
 gridSeedEnd:
 
 .text
@@ -20,7 +23,12 @@ main:
 	mv s0, a0	# s0 will hold address to grid
 	
 	# Next, set the initial state of the grid based on the gridSeed
+	call seedGrid	# address of grid already in a0
 	
+	# render grid to bitmap framebuffer
+	mv a0, s0
+	la a1, frameBuffer
+	call renderGrid
 	
 	# exit the program
 	li a7, 10
@@ -79,6 +87,57 @@ getCellAddress:
 	mv a1, t3	# a1 = bit offset
 	
 	ret
+
+#====================================================
+# getPixelAddress
+# Given the input row and column of a pixel, the address
+# of that framebuffer pixel will be returned
+#
+# Inputs:  a0 = row
+#          a1 = col
+#          a2 = framebuffer base address
+#
+# Output:  a0 = address of pixel
+#====================================================
+getPixelAddress:
+	lw t0, gridWidth	# display width matches grid width
+	mul t1, a0, t0
+	add t1, t1, a1
+	slli t1, t1, 2		# multiply by 4 bytes per pixel
+	add a0, a2, t1
+	ret
+	
+#====================================================
+# getCell
+# Returns cell value at given row and col
+#
+# Inputs:  a0 = row
+#          a1 = col
+#          a2 = grid base address
+#
+# Output:  a0 = cell value (0 or 1)
+#====================================================
+getCell:
+	# since getCell calls getCellAddress, we need to store the stack pointer
+	addi sp, sp, -4
+	sw ra, 0(sp)
+
+	call getCellAddress	# returns a0 = byte address, a1 = bit offset
+
+	# load byte into t0
+	lb t0, 0(a0)
+	
+	li t1, 7
+	sub t1, t1, a1		# flip bit order within byte (so that it comes up left to right on the display)
+	li t2, 1
+	sll t2, t2, t1
+	and t0, t0, t2
+	snez a0, t0
+
+	# load the stack pointer again
+	lw ra, 0(sp)
+	addi sp, sp, 4
+	ret
 	
 #====================================================
 # seedGrid
@@ -103,7 +162,7 @@ seedGrid:
 	
 	# totalbytes = (totalBits + 7) / 8
 	addi t3, t2, 7
-	srli, t3, t3, 3	# t3 = totalBytes
+	srli t3, t3, 3	# t3 = totalBytes
 	
 	# Zero the whole grid before setting seed
 	mv t4, t6	# current byte pointer is t4
@@ -120,10 +179,10 @@ zeroDone:
 	la t0, gridSeed		# t0 = seed start
 	la t1, gridSeedEnd	# t1 = seed end
 	sub t1, t1, t0		# t1 = total bytes (including null terminator)
-	addi t1, t1, -1		# t1 = total bytes (exclusing null terminator)
+	addi t1, t1, -1		# t1 = total bytes (excluding null terminator)
 	
 	# if seed size <= 0, then there is nothing to copy
-	bge zero, t1, maskFinalByte
+	bge zero, t1, copyDone
 	
 	# bytesToCopy = min(gridBytes, seedSize)
 	blt t3, t1, useGridBytes
@@ -134,14 +193,110 @@ useGridBytes:
 
 copyStart:
 	# by here, t5 is either set to gridBytes (t3) or seedSize (t1)
+	la t0, gridSeed		# t0 = seed start pointer
+	mv t4, t6		# t4 = grid start pointer
+copyLoop:
+	beqz t5, copyDone	# branch to copyDone if t5 = zero
 	
+	lb t1, 0(t0)		# load seed byte
+	sb t1, 0(t4)		# store byte from seed into grid
 	
+	addi t0, t0, 1		# increment t0
+	addi t4, t4, 1		# increment t4
+	addi t5, t5, -1		# decrement t5
 	
+	j copyLoop
+
+copyDone:
+	# once the copy is complete, then we clear the unused bits if needed
 	
+	# remainderBits = totalBits % 8
+	andi t0, t2, 7		# t0 = remainderBits
+	beqz t0, seedDone	# if no remainder, then seeding is done
 	
+	li t1, 1
+	sll t1, t1, t0		# t1 = 1 << remainderBits
+	addi t1, t1, -1		# t1 is a mask for valid bits
 	
+	addi t4, t3, -1		# t4 is the last byte index
+	add t4, t6, t4		# t4 is the address of the final byte in the grid
 	
+	# clear unused bits using the mask
+	lb t5, 0(t4)
+	and t5, t5, t1
+	sb t5, 0(t4)
+
+seedDone:
+	ret
 	
+#====================================================
+# renderGrid
+# Draws the grid into the bitmap framebuffer
+#
+# Inputs:  a0 = grid base address
+#          a1 = framebuffer base address
+#
+# Output:  none
+#====================================================
+renderGrid:
+	addi sp, sp, -24
+	sw ra, 20(sp)
+	sw s0, 16(sp)
+	sw s1, 12(sp)
+	sw s2, 8(sp)
+	sw s3, 4(sp)
+	sw s4, 0(sp)
+	
+	mv s0, a0	# s0 = grid pointer
+	mv s1, a1	# s1 = framebuffer base
+	
+	li s2, 0	# s2 = row
+	
+renderRowLoop:
+	lw t0, gridHeight
+	bge s2, t0, renderDone	# if row >= gridHeight then go to renderDone
+	
+	li s3, 0		# s3 = col
+
+renderColLoop:
+	lw t0, gridWidth
+	bge s3, t0, nextRow	# if col >= gridWidth then go to nextRow
+	
+	# get cell value
+	mv a0, s2
+	mv a1, s3
+	mv a2, s0
+	call getCell		# a0 = 0 or 1 depending on cell 
+    
+    	beqz a0, drawBlack	# if cell is 0, then go to drawBlack
+    	li s4, 0x00FFFFFF	# load white into s4
+    	j drawPixel
+drawBlack:
+    	li s4, 0x00282828 	# load (off-) black into s4
+drawPixel:
+    	mv a0, s2
+    	mv a1, s3
+    	mv a2, s1
+    	call getPixelAddress
+    	
+    	sw s4, 0(a0)		# store color in pixel's address
+
+	addi s3, s3, 1		# increment col
+	j renderColLoop
+	
+nextRow:
+	addi s2, s2, 1		# increment row
+	j renderRowLoop
+	
+renderDone:
+	lw s4, 0(sp)
+	lw s3, 4(sp)
+	lw s2, 8(sp)
+	lw s1, 12(sp)
+	lw s0, 16(sp)
+	lw ra, 20(sp)
+	addi sp, sp, 24
+	ret
 	
 	
 	
