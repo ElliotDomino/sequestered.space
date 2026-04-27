@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Inverse Kinematics | sequestered.space</title>
+    <title>RISC-V Conway's Game of Life | sequestered.space</title>
     <link rel="icon" type="image/x-icon" href="/resources/icon.ico" />
     <link rel="stylesheet" href="../styles.css" />
   </head>
@@ -20,18 +20,18 @@
 
       <main class="page">
         <!-- ===== Page header ===== -->
-        <h1>CCD Inverse Kinematics in Javascript</h1>
+        <h1>RISC-V implementation of Conway's Game of Life</h1>
 
         <section class="card">
           <p class="muted">
             <strong>Status:</strong> complete •
-            <strong>Date:</strong> 2026-04-22 •
-            <strong>Tags:</strong> javascript, CCD, algorithms
+            <strong>Date:</strong> 2026-04-27 •
+            <strong>Tags:</strong> RISC-V, algorithms, emergence
           </p>
 
           <p>
-            Cyclic Coordinate Descent Inverse Kinematics (CCD) is a method of finding the best rotation for each joint starting at the end of the "arm". This iterative approach gets closer and closer to the target with each pass.
-            Warning: I dont think any of the sliders work on mobile, I would look into it but this was just a little morning excercise for me :)
+            Conway's game of life is a sort of animated grid that follows rules similar to a simulated scarcity and competition environment.
+            This program was written in RISC-V assembly for simulation within <a href="https://github.com/thethirdone/rars" target="_blank" rel="noopener noreferrer">RARS</a>.
           </p>
         </section>
 
@@ -44,14 +44,8 @@
           <ul>
             <li>
               <strong>Repo:</strong>
-              <a href="https://github.com/ElliotDomino/sequestered.space/tree/8c94d90e714ec527f899aa7502a7791c3ad9f9bd/projects/inverse-kinematics" target="_blank" rel="noopener noreferrer">
-                /projects/inverse-kinematics/
-              </a>
-            </li>
-            <li>
-              <strong>Demo:</strong>
-              <a href="/projects/inverse-kinematics/index.html" target="_blank" rel="noopener noreferrer">
-                /projects/inverse-kinematics/index.html
+              <a href="https://github.com/ElliotDomino/sequestered.space/tree/7ef2afa5bb207c169e27be196d9f2c777e2cb859/projects/risc-v-life" target="_blank" rel="noopener noreferrer">
+                /projects/risc-v-life/
               </a>
             </li>
           </ul>
@@ -65,24 +59,21 @@
             <h2>Summary</h2>
 
             <p>
-              The CCD inverse kinematics algorithm relies on a simple iterative process to position a chain of joints so that an end effector reaches a target. The first concept is <strong>end effector targeting</strong>, where the algorithm continuously attempts to move the final joint in the chain closer to the desired position. The second is <strong>joint rotation</strong>, or adjusting each joint starting from the end of the chain and working backwards to better align the end effector with the target. The last concept is <strong>iteration</strong>, or repeatedly applying these adjustments until the end effector is sufficiently close to the target.
+              I was first introduced to RISC-V and RARS by a class I took in university. For those who are not familiar, RISC-V is an assembly archetecture that can be simulated on conventional hardware with tools like <a href="https://github.com/thethirdone/rars" target="_blank" rel="noopener noreferrer">RARS</a>.
+              Writing code for RISC and RARS was initially very difficult for me, as it was the first time I was really interacting with assembley, but with lots of practice I have come to enjoy it.
             </p>
 
             <p>
-              The <a target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Inverse_kinematics">wikipedia article</a> on inverse kinematics goes into greater detail on why you might want to do this.
+              This specific project is meant to simulate <a href="https://en.wikipedia.org/wiki/Conway's_Game_of_Life" target="_blank" rel="noopener noreferrer">Conway's Game of Life</a>.
+              It does this by interacting with the Bitmap Display feature of RARS. See the attached video for a little more context.
             </p>
-
-            <p>
-              The combined effect of end effector targeting, joint rotation, and iteration results in <strong>smooth and natural motion</strong> that allows articulated structures, such as robotic arms or character limbs, to reach toward a goal in a believable way.
-            </p>
-
           </div>
 
           <div class="media media--sm">
-            <img
-              src="../projects/inverse-kinematics/inverse-kinematics.png"
-              alt="A screenshot from the boids page showing an arrangement of boids in a few flocks."
-            />
+            <video controls>
+              <source src="../projects/risc-v-life/demo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </section>
 
@@ -94,7 +85,7 @@
           <h2>Context</h2>
 
           <p>
-            I wanted to create another little demo in Javascript after my exams this semester. I have implemented this before in a visual scripting language in a game, but I thought that it would be cool to have something else to put on my site!
+            An excuse to do some more programming in RISC-V! I think it is a really promising archetecture, and I want to show off how cool it is!
           </p>
         </section>
 
