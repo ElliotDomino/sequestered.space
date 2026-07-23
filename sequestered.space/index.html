@@ -183,7 +183,7 @@
 
     <div class="ui-layer">
         <header>
-            <div class="sys-info">CORE://CONWAY_LIFE<br>SOURCE://<br>STATUS://EVOLVING</div>
+            <div class="sys-info">CORE://CONWAY_LIFE<br>SOURCE://<span id="header-source-text">ARCHIVE</span><br>STATUS://EVOLVING</div>
             <div class="sys-info" style="text-align: right;">DATE://2026.07.21<br>LOC://SEQUESTERED_V2<br>AUTH://ELLIOT</div>
         </header>
 
@@ -222,6 +222,7 @@
         const genText = document.getElementById('generation-count');
         const footerQuote = document.getElementById('footer-quote');
         const sourceText = document.getElementById('source-text');
+        const headerSourceText = document.getElementById('header-source-text');
         
         let allQuotesData = [];
         let combinedQuotes = "Sequestered observations of a digital void. Patterns in the static.";
@@ -249,7 +250,9 @@
                 combinedQuotes = allQuotesData.map(q => q.text).join(" ").replace(/\s+/g, ' ');
                 const randomQuoteObj = allQuotesData[Math.floor(Math.random() * allQuotesData.length)];
                 footerQuote.innerText = `"${randomQuoteObj.text}"`;
-                sourceText.innerText = randomQuoteObj.author.toUpperCase().replace(/\s+/g, '_');
+                const normalizedAuthor = randomQuoteObj.author.toUpperCase().replace(/\s+/g, '_');
+                sourceText.innerText = normalizedAuthor;
+                headerSourceText.innerText = normalizedAuthor;
             } catch(e) { console.error("Quotes load failed", e); }
             
             initGrid();
