@@ -1,2 +1,4 @@
 generator/.venv/
 __pycache__/
+sequestered.space/.agents/
+sequestered.space/.codex/
