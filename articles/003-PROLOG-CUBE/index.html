@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prolog Rubik's Cube Solver // SEQUESTERED.SPACE</title>
+    <link rel="icon" href="/resources/soul-white-small.ico" type="image/x-icon">
+    <style>
+        :root { --bg: #000; --fg: #fff; --accent: #00f5ff; --highlight: #ffaa00; --border: #333; }
+        ::selection { background: var(--highlight); color: #000; }
+        body, html { background: var(--bg); color: var(--fg); font-family: 'Courier New', monospace; margin: 0; padding: 0; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        header { border-bottom: 2px solid var(--accent); margin-bottom: 40px; padding-bottom: 20px; position: relative; }
+        header::after { content: ""; position: absolute; bottom: -5px; left: 0; width: 80px; height: 2px; background: var(--highlight); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .index-pill { background: var(--accent); color: #000; padding: 2px 8px; font-weight: bold; margin-right: 10px; }
+        .archive-link { color: var(--highlight); font-weight: bold; border: 1px solid var(--highlight); padding: 8px 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .archive-link:hover { background: var(--highlight); color: #000; text-decoration: none; }
+        h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 10px 0; text-transform: uppercase; color: var(--fg); }
+        .meta-bar { display: flex; gap: 20px; font-size: 0.8rem; color: var(--accent); text-transform: uppercase; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5px 0; margin-top: 20px; }
+        .meta-bar span:first-child { color: var(--highlight); font-weight: bold; }
+        .content { font-size: 1.1rem; }
+        .content h2 { border-left: 5px solid var(--accent); padding-left: 15px; margin-top: 40px; text-transform: uppercase; font-size: 1.2rem; color: var(--accent); }
+        .content strong { color: var(--highlight); font-weight: bold; }
+        .content blockquote { border-left: 3px solid var(--highlight); margin: 20px 0; padding: 10px 20px; background: rgba(255, 170, 0, 0.05); color: var(--highlight); font-style: italic; }
+        .content img,
+        .content video,
+        .content iframe,
+        .content canvas,
+        .content svg { display: block; max-width: 100%; width: 100%; height: auto; margin: 20px 0; }
+        .content img,
+        .content video,
+        .content iframe,
+        .content canvas { border: 1px solid var(--accent); }
+        .thought-log { background: rgba(255, 170, 0, 0.1); border: 1px solid var(--highlight); padding: 20px; margin: 40px 0; position: relative; }
+        .thought-log::before { content: "THOUGHT_LOG // OBSERVATION"; position: absolute; top: -10px; left: 10px; background: var(--highlight); color: #000; font-size: 0.7rem; padding: 2px 5px; font-weight: bold; }
+        footer { margin-top: 80px; border-top: 1px solid var(--border); padding-top: 20px; font-size: 0.8rem; color: var(--border); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; color: var(--highlight); }
+        pre { background: #111; padding: 15px; border: 1px solid var(--border); overflow-x: auto; border-left: 3px solid var(--highlight); }
+        code { color: var(--highlight); }
+        @media (max-width: 640px) {
+            .header-top { align-items: flex-start; }
+            .archive-link { width: 100%; box-sizing: border-box; text-align: center; }
+            footer { align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div><span class="index-pill">003</span> / PROJECTS</div>
+                <a class="archive-link" href="../../index.html">GO_BACK_TO_ARCHIVE</a>
+            </div>
+            <h1>Prolog Rubik's Cube Solver</h1>
+            <div class="meta-bar"><span>STATUS: PUBLISHED</span><span>DATE: 2026-04-29</span></div>
+        </header>
+        <article class="content"><p>I have no idea how to solve a Rubik's Cube, and I doubt I ever will. What I do know, however, is Prolog. After completing a non-procedural programming course at university, I wanted to build something that would let me show off what I had learned.</p>
+<p>This is a Rubik's Cube solver written in Prolog and interpreted through JavaScript for browser-based interaction. It is not especially fast, but it was certainly fun to make. <strong>At the moment, it can only solve cubes within a reasonable amount of time when they are approximately five or six moves away from being solved.</strong></p>
+<h2>Links</h2>
+<ul>
+<li><strong>Repo:</strong> <a href="https://github.com/ElliotDomino/Prolog-Rubik-s-Solver" target="_blank" rel="noopener noreferrer">https://github.com/ElliotDomino/Prolog-Rubik-s-Solver</a></li>
+<li><strong>Demo:</strong> <a href="./resources/index.html" target="_blank" rel="noopener noreferrer">Try the Rubik's Cube Solver</a></li>
+<li><strong>Prolog Source:</strong> <a href="./resources/cube-txt-copy.txt" target="_blank" rel="noopener noreferrer">View the Prolog code</a></li>
+</ul>
+<h2>How It Works</h2>
+<p>To interact with the Prolog solver, the cube first needs a digital representation. The user interface allows the current state of the cube to be entered as a <strong>sticker model</strong>, which is then passed into Prolog through a JavaScript translation layer.</p>
+<p>Once the state reaches Prolog, the program extracts the <strong>cubies</strong>: the physical pieces that make up a Rubik's Cube. The face data and cubie data are used to validate whether the entered cube represents a possible and solvable configuration.</p>
+<p>When the cube is valid, the solver searches for a sequence of moves using an <strong>iterative deepening search</strong>:</p>
+<ol>
+<li>Search for a solution requiring zero moves.</li>
+<li>Search again with a maximum depth of one move.</li>
+<li>Continue increasing the depth until a solution is found.</li>
+</ol>
+<p>This guarantees that the first solution found is optimal, but it also makes the solver <strong>incredibly slow</strong>.</p>
+<h2>Search Complexity</h2>
+<p>Each additional search depth compounds the amount of work required:</p>
+<ul>
+<li>Depth 1: approximately 18 searches</li>
+<li>Depth 2: approximately 18 × 12 searches</li>
+<li>Depth 3: approximately 18 × 12² searches</li>
+<li>Depth 4: approximately 18 × 12³ searches</li>
+<li>Depth 7: approximately 18 × 12⁶, or <strong>53,747,712 searches</strong></li>
+</ul>
+<p>Every deeper iteration also repeats the work from all previous depths. It is not a particularly efficient solution, but it is still <em>a solution</em>.</p>
+<p><img alt="Prolog Rubik's Cube Solver" src="./resources/cube.png" /></p>
+<h2>Trying the Solver</h2>
+<p>The Prolog source is worth reading if you want to see how unusual the language can be, and how much complexity sits behind this seemingly simple implementation.</p>
+<p>You can experiment with the browser demo above. Without a physical Rubik's Cube nearby, the <a href="https://ruwix.com/cube-solver/" target="_blank" rel="noopener noreferrer">Ruwix online cube solver</a> can be useful in its flat view for creating test configurations.</p>
+<h2>Context</h2>
+<p>I built this project in the break between the end of classes and the beginning of my summer job. It was an excuse to create something with Prolog before I forgot everything I had learned.</p></article>
+        <div class="thought-log">A perfect solution is not always a practical one. Brute force can guarantee the shortest path, but every extra step reminds us how quickly possibility becomes complexity.</div>
+        <footer>
+            <span>[EOF] SEQUESTERED.SPACE // 2026</span>
+            <a class="archive-link" href="../../index.html">GO_BACK_TO_ARCHIVE</a>
+        </footer>
+    </div>
+</body>
+</html>
