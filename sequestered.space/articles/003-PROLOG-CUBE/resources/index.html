@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/tau-prolog@0.3.2/modules/core.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tau-prolog@0.3.2/modules/lists.js"></script>
+  <meta charset="UTF-8" />
+  <title>Rubik's Cube Prolog Solver</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+    }
+
+    .cube-net {
+      display: grid;
+      grid-template-columns: repeat(4, 180px);
+      grid-template-rows: repeat(3, 180px);
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .face {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 6px;
+      background: #222;
+      padding: 6px;
+    }
+
+    .tile {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border: 1px solid #999;
+      cursor: pointer;
+    }
+
+    .tile:hover {
+      outline: 3px solid #555;
+    }
+
+    .tile.locked {
+      cursor: not-allowed;
+      box-shadow: inset 0 0 0 4px #000;
+    }
+
+    .tile.locked:hover {
+      outline: none;
+    }
+
+    .up {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .left {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .front {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .right {
+      grid-column: 3;
+      grid-row: 2;
+    }
+
+    .back {
+      grid-column: 4;
+      grid-row: 2;
+    }
+
+    .down {
+      grid-column: 2;
+      grid-row: 3;
+    }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .color-button {
+      width: 36px;
+      height: 36px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      margin: 0 6px;
+      cursor: pointer;
+    }
+
+    .selected {
+      outline: 4px solid black;
+    }
+
+    .solver-panel {
+      max-width: 520px;
+      margin: 20px auto 0;
+      padding: 18px;
+      background: white;
+      text-align: center;
+    }
+
+    .solve-button {
+      padding: 10px 22px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      background: #222;
+      color: white;
+      cursor: pointer;
+      font-family: monospace;
+    }
+
+    .solve-button:hover {
+      background: #444;
+    }
+
+    .solve-button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .solver-status {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    .solver-status.idle {
+      color: #555;
+    }
+
+    .solver-status.thinking {
+      color: #d97706;
+    }
+
+    .solver-status.success {
+      color: #15803d;
+    }
+
+    .solver-status.error {
+      color: #b91c1c;
+    }
+
+    .solution-output {
+      margin-top: 12px;
+      padding: 14px;
+      min-height: 24px;
+      background: #f4f4f4;
+      font-family: monospace;
+      font-size: 18px;
+    }
+
+    .legend {
+      max-width: 520px;
+      margin: 16px auto;
+      padding: 14px;
+      background: #ffffff;
+      font-size: 14px;
+      font-family: monospace;
+    }
+
+    .legend h3 {
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 12px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <button class="color-button selected" style="background: white;" data-color="white"></button>
+    <button class="color-button" style="background: yellow;" data-color="yellow"></button>
+    <button class="color-button" style="background: red;" data-color="red"></button>
+    <button class="color-button" style="background: orange;" data-color="orange"></button>
+    <button class="color-button" style="background: blue;" data-color="blue"></button>
+    <button class="color-button" style="background: green;" data-color="green"></button>
+  </div>
+
+  <div class="cube-net">
+    <div class="face up" data-face="up"></div>
+    <div class="face left" data-face="left"></div>
+    <div class="face front" data-face="front"></div>
+    <div class="face right" data-face="right"></div>
+    <div class="face back" data-face="back"></div>
+    <div class="face down" data-face="down"></div>
+  </div>
+
+  <div class="solver-panel">
+    <button id="solveButton" class="solve-button">Solve Cube</button>
+
+    <div id="solverStatus" class="solver-status idle">
+      Ready to solve
+    </div>
+
+    <div id="solutionOutput" class="solution-output">
+      —
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3>Move Notation</h3>
+    <div class="legend-grid">
+      <div><b>U</b> – Up face clockwise</div>
+      <div><b>D</b> – Down face clockwise</div>
+      <div><b>F</b> – Front face clockwise</div>
+      <div><b>B</b> – Back face clockwise</div>
+      <div><b>R</b> – Right face clockwise</div>
+      <div><b>L</b> – Left face clockwise</div>
+
+      <div><b>'</b> – Counter-clockwise</div>
+      <div><b>2</b> – Double turn (180°)</div>
+    </div>
+  </div>
+
+  <script>
+
+    console.log("Tau Prolog pl:", window.pl);
+
+    let selectedColor = "white";
+
+    const colorButtons = document.querySelectorAll(".color-button");
+    const faces = document.querySelectorAll(".face");
+
+    const centerColors = {
+      up: "white",
+      left: "orange",
+      front: "green",
+      right: "red",
+      back: "blue",
+      down: "yellow"
+    };
+
+    colorButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        selectedColor = button.dataset.color;
+
+        colorButtons.forEach(btn => btn.classList.remove("selected"));
+        button.classList.add("selected");
+      });
+    });
+
+    faces.forEach(face => {
+      const faceName = face.dataset.face;
+
+      for (let i = 0; i < 9; i++) {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.dataset.index = i;
+
+        // Default every tile to white
+        tile.dataset.color = "white";
+        tile.style.background = "white";
+
+        // Lock center tile
+        if (i === 4) {
+          const centerColor = centerColors[faceName];
+
+          tile.dataset.color = centerColor;
+          tile.style.background = centerColor;
+          tile.classList.add("locked");
+        } else {
+          tile.addEventListener("click", () => {
+            tile.style.background = selectedColor;
+            tile.dataset.color = selectedColor;
+          });
+        }
+
+        face.appendChild(tile);
+      }
+    });
+
+    // Prolog code initiated here
+
+    const session = pl.create();
+
+    async function loadProlog() {
+      const response = await fetch("cube.pl");
+      const program = await response.text();
+
+      session.consult(program, {
+        success: () => console.log("Prolog loaded"),
+        error: err => console.error(err)
+      });
+    }
+
+    loadProlog();
+
+    function getFaceColors(faceName) {
+      const face = document.querySelector(`.face.${faceName}`);
+      return [...face.querySelectorAll(".tile")]
+        .map(t => t.dataset.color || "unset");
+    }
+
+    function cubeToProlog() {
+      const up = getFaceColors("up");
+      const left = getFaceColors("left");
+      const front = getFaceColors("front");
+      const right = getFaceColors("right");
+      const back = getFaceColors("back");
+      const down = getFaceColors("down");
+
+      return `
+        cube(
+          up(${toList(up)}),
+          left(${toList(left)}),
+          front(${toList(front)}),
+          right(${toList(right)}),
+          back(${toList(back)}),
+          down(${toList(down)})
+        )
+      `;
+    }
+
+    function toList(arr) {
+      return "[" + arr.join(",") + "]";
+    }
+
+    function formatSolution(answer) {
+      return pl.format_answer(answer)
+        .replace("Solution = [", "")
+        .replace("] ;", "")
+        .replace("].", "")
+        .replace(/\b([udfbrl])_prime\b/g, (_, move) => move.toUpperCase() + "'")
+        .replace(/\b([udfbrl])2\b/g, (_, move) => move.toUpperCase() + "2")
+        .replace(/\b[udfbrl]\b/g, move => move.toUpperCase())
+        .replace(/,/g, " ")
+        .trim() || "Already solved";
+    }
+
+    document.getElementById("solveButton").addEventListener("click", () => {
+      const button = document.getElementById("solveButton");
+      const status = document.getElementById("solverStatus");
+      const output = document.getElementById("solutionOutput");
+
+      const cube = cubeToProlog();
+
+      button.disabled = true;
+      status.className = "solver-status thinking";
+      status.textContent = "Searching for a solution...";
+      output.textContent = ". . .";
+
+      // Let the browser repaint before Tau Prolog starts blocking.
+      setTimeout(() => {
+        const query = `solve_cube(${cube}, Solution).`;
+
+        session.query(query, {
+          success: () => {
+            session.answer(answer => {
+              button.disabled = false;
+
+              if (answer === false) {
+                status.className = "solver-status error";
+                status.textContent = "No solution found";
+                output.textContent = "Invalid cube or solution is deeper than the current search limit.";
+              } else {
+                status.className = "solver-status success";
+                status.textContent = "Solved";
+                output.textContent = formatSolution(answer);
+              }
+            });
+          },
+          error: err => {
+            button.disabled = false;
+            status.className = "solver-status error";
+            status.textContent = "Query error";
+            output.textContent = err;
+          }
+        });
+      }, 50);
+    });
+  </script>
+
+</body>
+</html>

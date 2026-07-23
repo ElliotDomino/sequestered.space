@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About // SEQUESTERED.SPACE</title>
+    <link rel="icon" href="/resources/soul-white-small.ico" type="image/x-icon">
+    <style>
+        :root { --bg: #000; --fg: #fff; --accent: #00f5ff; --highlight: #ffaa00; --border: #333; }
+        ::selection { background: var(--highlight); color: #000; }
+        body, html { background: var(--bg); color: var(--fg); font-family: 'Courier New', monospace; margin: 0; padding: 0; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        header { border-bottom: 2px solid var(--accent); margin-bottom: 40px; padding-bottom: 20px; position: relative; }
+        header::after { content: ""; position: absolute; bottom: -5px; left: 0; width: 80px; height: 2px; background: var(--highlight); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .index-pill { background: var(--accent); color: #000; padding: 2px 8px; font-weight: bold; margin-right: 10px; }
+        .archive-link { color: var(--highlight); font-weight: bold; border: 1px solid var(--highlight); padding: 8px 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .archive-link:hover { background: var(--highlight); color: #000; text-decoration: none; }
+        h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 10px 0; text-transform: uppercase; color: var(--fg); }
+        .meta-bar { display: flex; gap: 20px; font-size: 0.8rem; color: var(--accent); text-transform: uppercase; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5px 0; margin-top: 20px; }
+        .meta-bar span:first-child { color: var(--highlight); font-weight: bold; }
+        .content { font-size: 1.1rem; }
+        .content h2 { border-left: 5px solid var(--accent); padding-left: 15px; margin-top: 40px; text-transform: uppercase; font-size: 1.2rem; color: var(--accent); }
+        .content strong { color: var(--highlight); font-weight: bold; }
+        .content blockquote { border-left: 3px solid var(--highlight); margin: 20px 0; padding: 10px 20px; background: rgba(255, 170, 0, 0.05); color: var(--highlight); font-style: italic; }
+        .content img,
+        .content video,
+        .content iframe,
+        .content canvas,
+        .content svg { display: block; max-width: 100%; width: 100%; height: auto; margin: 20px 0; }
+        .content img,
+        .content video,
+        .content iframe,
+        .content canvas { border: 1px solid var(--accent); }
+        .thought-log { background: rgba(255, 170, 0, 0.1); border: 1px solid var(--highlight); padding: 20px; margin: 40px 0; position: relative; }
+        .thought-log::before { content: "THOUGHT_LOG // OBSERVATION"; position: absolute; top: -10px; left: 10px; background: var(--highlight); color: #000; font-size: 0.7rem; padding: 2px 5px; font-weight: bold; }
+        footer { margin-top: 80px; border-top: 1px solid var(--border); padding-top: 20px; font-size: 0.8rem; color: var(--border); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; color: var(--highlight); }
+        pre { background: #111; padding: 15px; border: 1px solid var(--border); overflow-x: auto; border-left: 3px solid var(--highlight); }
+        code { color: var(--highlight); }
+        @media (max-width: 640px) {
+            .header-top { align-items: flex-start; }
+            .archive-link { width: 100%; box-sizing: border-box; text-align: center; }
+            footer { align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div><span class="index-pill">000</span> / PROJECTS</div>
+                <a class="archive-link" href="../../index.html">GO_BACK_TO_ARCHIVE</a>
+            </div>
+            <h1>About</h1>
+            <div class="meta-bar"><span>STATUS: PUBLISHED</span><span>DATE: 2026-07-23</span></div>
+        </header>
+        <article class="content"><p>I’m Elliot Chrystal, a computer science student at the University of Alberta with a minor in philosophy. I work as a software developer and use this site as a place to collect projects, technical notes, and the kinds of experiments that are worth finishing even when they begin as small curiosities.</p>
+<p><img alt="A film self-portrait with camera" src="./resources/me-and-camera.jpg" /></p>
+<p>I like building software that is clear, direct, and useful. A lot of that instinct comes from moving between different kinds of work: university courses, paid development, and personal projects that exist mostly because I wanted to understand something more deeply.</p>
+<p>Outside of programming, I spend time on film photography, vinyl records, audiovisual hardware, and jazz trumpet. Those interests pull me toward tools and systems with texture and constraint, which is probably part of why I appreciate both modern software and older, more durable ways of doing things.</p>
+<h2>Background</h2>
+<p>Computer science keeps me learning quickly. Philosophy keeps me honest about how I think. Between the two, I’ve ended up with a strong bias toward systems that are understandable, stable, and built with intent.</p>
+<p>I’m interested in new tools when they solve a real problem, but I don’t think novelty is enough on its own. In practice, I care more about whether something is reliable, legible, and worth maintaining.</p>
+<h2>Contact</h2>
+<p>If you want to reach me, these are the clearest channels:</p>
+<ul>
+<li><strong>Email:</strong> <a href="mailto:14s0c@protonmail.com" target="_blank" rel="noopener noreferrer">14s0c@protonmail.com</a> <em>(preferred)</em></li>
+<li><strong>GitHub:</strong> <a href="https://github.com/ElliotDomino" target="_blank" rel="noopener noreferrer">github.com/ElliotDomino</a></li>
+<li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/elliot-chrystal-b74998212" target="_blank" rel="noopener noreferrer">linkedin.com/in/elliot-chrystal-b74998212</a></li>
+</ul>
+<p>Questions, project ideas, and thoughtful messages are all welcome.</p>
+<h2>What To Include</h2>
+<p>A little context helps. If you’re reaching out, it’s useful to include:</p>
+<ul>
+<li>who you are and where you found the site</li>
+<li>why you’re getting in touch</li>
+<li>links, references, or screenshots if it’s about a project</li>
+</ul>
+<h2>Notes</h2>
+<ul>
+<li><strong>Spam:</strong> ignored</li>
+<li><strong>Sales:</strong> probably not a fit</li>
+<li><strong>Philosophical takes:</strong> welcome</li>
+</ul></article>
+        <div class="thought-log">A good technical life is built on curiosity, steadiness, and the patience to keep learning past the first solution.</div>
+        <footer>
+            <span>[EOF] SEQUESTERED.SPACE // 2026</span>
+            <a class="archive-link" href="../../index.html">GO_BACK_TO_ARCHIVE</a>
+        </footer>
+    </div>
+</body>
+</html>

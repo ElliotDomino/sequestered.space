@@ -1,0 +1,47 @@
+[
+  {
+    "index": "000",
+    "title": "About",
+    "category": "INFO",
+    "url": "articles/000-ABOUT/index.html",
+    "previews": [
+      "articles/000-ABOUT/resources/me-and-camera.jpg"
+    ]
+  },
+  {
+    "index": "001",
+    "title": "Boids Javascript Implementation",
+    "category": "ALGO",
+    "url": "articles/001-BOIDS-JS/index.html",
+    "previews": [
+      "articles/001-BOIDS-JS/resources/boids-image.png"
+    ]
+  },
+  {
+    "index": "002",
+    "title": "CCD Inverse Kinematics in Javascript",
+    "category": "ALGO",
+    "url": "articles/002-INVERSE-KINEMATICS/index.html",
+    "previews": [
+      "articles/002-INVERSE-KINEMATICS/resources/inverse-kinematics.png"
+    ]
+  },
+  {
+    "index": "003",
+    "title": "Prolog Rubik's Cube Solver",
+    "category": "ALGO",
+    "url": "articles/003-PROLOG-CUBE/index.html",
+    "previews": [
+      "articles/003-PROLOG-CUBE/resources/cube.png"
+    ]
+  },
+  {
+    "index": "004",
+    "title": "RISC-V Conway's Game of Life",
+    "category": "ALGO",
+    "url": "articles/004-RISC-V-LIFE/index.html",
+    "previews": [
+      "articles/004-RISC-V-LIFE/resources/demo.mp4"
+    ]
+  }
+]

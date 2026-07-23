@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCD Inverse Kinematics in Javascript // SEQUESTERED.SPACE</title>
+    <link rel="icon" href="/resources/soul-white-small.ico" type="image/x-icon">
+    <style>
+        :root { --bg: #000; --fg: #fff; --accent: #00f5ff; --highlight: #ffaa00; --border: #333; }
+        ::selection { background: var(--highlight); color: #000; }
+        body, html { background: var(--bg); color: var(--fg); font-family: 'Courier New', monospace; margin: 0; padding: 0; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        header { border-bottom: 2px solid var(--accent); margin-bottom: 40px; padding-bottom: 20px; position: relative; }
+        header::after { content: ""; position: absolute; bottom: -5px; left: 0; width: 80px; height: 2px; background: var(--highlight); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .index-pill { background: var(--accent); color: #000; padding: 2px 8px; font-weight: bold; margin-right: 10px; }
+        .archive-link { color: var(--highlight); font-weight: bold; border: 1px solid var(--highlight); padding: 8px 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .archive-link:hover { background: var(--highlight); color: #000; text-decoration: none; }
+        h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 10px 0; text-transform: uppercase; color: var(--fg); }
+        .meta-bar { display: flex; gap: 20px; font-size: 0.8rem; color: var(--accent); text-transform: uppercase; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5px 0; margin-top: 20px; }
+        .meta-bar span:first-child { color: var(--highlight); font-weight: bold; }
+        .content { font-size: 1.1rem; }
+        .content h2 { border-left: 5px solid var(--accent); padding-left: 15px; margin-top: 40px; text-transform: uppercase; font-size: 1.2rem; color: var(--accent); }
+        .content strong { color: var(--highlight); font-weight: bold; }
+        .content blockquote { border-left: 3px solid var(--highlight); margin: 20px 0; padding: 10px 20px; background: rgba(255, 170, 0, 0.05); color: var(--highlight); font-style: italic; }
+        .content img,
+        .content video,
+        .content iframe,
+        .content canvas,
+        .content svg { display: block; max-width: 100%; width: 100%; height: auto; margin: 20px 0; }
+        .content img,
+        .content video,
+        .content iframe,
+        .content canvas { border: 1px solid var(--accent); }
+        .thought-log { background: rgba(255, 170, 0, 0.1); border: 1px solid var(--highlight); padding: 20px; margin: 40px 0; position: relative; }
+        .thought-log::before { content: "THOUGHT_LOG // OBSERVATION"; position: absolute; top: -10px; left: 10px; background: var(--highlight); color: #000; font-size: 0.7rem; padding: 2px 5px; font-weight: bold; }
+        footer { margin-top: 80px; border-top: 1px solid var(--border); padding-top: 20px; font-size: 0.8rem; color: var(--border); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; color: var(--highlight); }
+        pre { background: #111; padding: 15px; border: 1px solid var(--border); overflow-x: auto; border-left: 3px solid var(--highlight); }
+        code { color: var(--highlight); }
+        @media (max-width: 640px) {
+            .header-top { align-items: flex-start; }
+            .archive-link { width: 100%; box-sizing: border-box; text-align: center; }
+            footer { align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div><span class="index-pill">002</span> / PROJECTS</div>
+                <a class="archive-link" href="../../index.html">GO_BACK_TO_ARCHIVE</a>
+            </div>
+            <h1>CCD Inverse Kinematics in Javascript</h1>
+            <div class="meta-bar"><span>STATUS: PUBLISHED</span><span>DATE: 2026-04-22</span></div>
+        </header>
+        <article class="content"><p>Cyclic Coordinate Descent Inverse Kinematics (CCD) is a method for finding the best rotation for each joint in a chain, starting near the end of the arm and working backward. With each pass, the end effector moves closer to its target.</p>
+<blockquote>
+<p><strong>Note:</strong> The sliders may not work properly on mobile. This was a small morning exercise, so the demo is best viewed on desktop.</p>
+</blockquote>
+<h2>Links</h2>
+<ul>
+<li><strong>Repo:</strong> <a href="https://github.com/ElliotDomino/inverse-kinematics-js.git" target="_blank" rel="noopener noreferrer">Inverse Kinematics source on GitHub</a></li>
+<li><strong>Demo:</strong> <a href="./resources/index.html" target="_blank" rel="noopener noreferrer">Live CCD Inverse Kinematics Demo</a></li>
+</ul>
+<h2>The Algorithm</h2>
+<p>The CCD inverse kinematics algorithm relies on a simple iterative process to position a chain of joints so that an end effector reaches a target:</p>
+<ol>
+<li><strong>End-effector targeting</strong>: Measure how the final point in the chain needs to move to approach the target.</li>
+<li><strong>Joint rotation</strong>: Starting from the joint nearest the end effector and working backward, rotate each joint to better align the end effector with the target.</li>
+<li><strong>Iteration</strong>: Repeat these adjustments until the end effector is sufficiently close to the target or the iteration limit is reached.</li>
+</ol>
+<p>Together, these steps create <strong>smooth, natural-looking motion</strong> that allows articulated structures such as robotic arms and character limbs to reach toward a goal.</p>
+<p><img alt="CCD Inverse Kinematics Demonstration" src="./resources/inverse-kinematics.png" /></p>
+<p>For a broader explanation of the problem, see the <a href="https://en.wikipedia.org/wiki/Inverse_kinematics" target="_blank" rel="noopener noreferrer">Wikipedia article on inverse kinematics</a>.</p>
+<h2>Context</h2>
+<p>I wanted to create another small JavaScript demo after finishing my exams this semester. I had implemented inverse kinematics before using a visual scripting language in a game, and thought it would be fun to recreate the idea as an interactive project for my site.</p></article>
+        <div class="thought-log">Complex motion can emerge from a simple loop: look at the target, adjust one joint, and repeat until the whole chain reaches where it needs to go.</div>
+        <footer>
+            <span>[EOF] SEQUESTERED.SPACE // 2026</span>
+            <a class="archive-link" href="../../index.html">GO_BACK_TO_ARCHIVE</a>
+        </footer>
+    </div>
+</body>
+</html>
